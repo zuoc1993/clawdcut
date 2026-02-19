@@ -6,6 +6,8 @@ free stock media assets from public platforms (Pexels, Pixabay).
 
 from pathlib import Path
 
+from deepagents import SubAgent
+
 from clawdcut.tools.stock_tools import create_stock_tools
 
 SKILLS_DIR = Path(__file__).parent.parent / "skills"
@@ -385,7 +387,7 @@ Note in asset inventory:
 """
 
 
-def create_asset_manager_subagent(workdir: Path) -> dict:
+def create_asset_manager_subagent(workdir: Path) -> SubAgent:
     """Create the Asset Manager SubAgent specification.
 
     Args:
