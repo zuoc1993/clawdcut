@@ -55,21 +55,6 @@ class TestCreateAssetManagerSubagent:
         assert "pixabay_search" in tool_names
         assert "pixabay_download" in tool_names
 
-    def test_has_skills(self, subagent: dict) -> None:
-        assert "skills" in subagent
-        skills = subagent["skills"]
-        assert len(skills) > 0
-
-    def test_skills_point_to_asset_acquisition(self, subagent: dict) -> None:
-        skills = subagent["skills"]
-        skill_path = skills[0]
-        assert "asset-acquisition" in skill_path
-
-    def test_skill_directory_exists(self, subagent: dict) -> None:
-        skills = subagent["skills"]
-        skill_path = Path(skills[0])
-        assert skill_path.exists(), f"Skill directory does not exist: {skill_path}"
-
     def test_tools_bound_to_workdir(self, subagent: dict, workdir: Path) -> None:
         """Verify download tools save files relative to workdir."""
         from unittest.mock import patch

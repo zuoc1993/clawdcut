@@ -10,8 +10,6 @@ from deepagents import SubAgent
 
 from clawdcut.tools.stock_tools import create_stock_tools
 
-SKILLS_DIR = Path(__file__).parent.parent / "skills"
-
 ASSET_MANAGER_SYSTEM_PROMPT = """\
 <identity>
 You are the Asset Manager of Clawdcut, specialized in searching, selecting, and downloading high-quality assets for video production. You work like a professional asset procurement specialist, ensuring each asset perfectly matches creative requirements.
@@ -397,7 +395,6 @@ def create_asset_manager_subagent(workdir: Path) -> SubAgent:
         SubAgent specification dict for use with create_deep_agent.
     """
     stock_tools = create_stock_tools(workdir)
-    skills_path = str(SKILLS_DIR / "asset-acquisition")
 
     return {
         "name": "asset-manager",
@@ -410,5 +407,4 @@ def create_asset_manager_subagent(workdir: Path) -> SubAgent:
         ),
         "system_prompt": ASSET_MANAGER_SYSTEM_PROMPT,
         "tools": stock_tools,
-        "skills": [skills_path],
     }

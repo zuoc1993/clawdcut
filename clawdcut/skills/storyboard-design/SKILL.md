@@ -1,306 +1,291 @@
 ---
 name: storyboard-design
-description: 分镜设计与视觉规划 - 镜头语言、分镜表、Mood Board、时间轴可视化
+description: Use when converting scripts into visual shot plans, planning camera movements, or creating visual references for video production that require specific shot composition and timing
 ---
 
-# Storyboard Design Skill
+# Storyboard Design
 
-## 用途
+## Overview
 
-将脚本转化为具体的视觉画面规划，指导后续剪辑制作。
+Transforms written scripts into visual production plans. Defines specific shots with camera angles, movements, durations, and compositional references that guide the actual video production or editing process.
 
-## 能力范围
+## When to Use
 
-### 1. 镜头类型选择
-- **景别**: 远景、全景、中景、近景、特写
-- **角度**: 平视、俯视、仰视、倾斜
-- **运动**: 推、拉、摇、移、跟、升、降
-- **时长**: 根据节奏确定每个镜头时长
+**Use this skill when:**
 
-### 2. 分镜描述生成
-- **画面内容**: 具体场景、人物动作、物体位置
-- **镜头运动**: 如何运镜、速度、起止点
-- **转场方式**: 切、淡入淡出、叠化、划像等
-- **音效提示**: 配合画面的声音设计
+- Script needs translation into specific visual shots
+- Camera movements and angles need precise planning
+- Shot durations and pacing require calculation
+- Visual references and mood boards are needed
+- Production team needs clear visual guidance
+- Complex sequences require breakdown into individual shots
 
-### 3. Mood Board 创建
-- **色彩参考**: 整体色调、配色方案
-- **光影参考**: 光线方向、明暗对比
-- **构图参考**: 经典构图案例
-- **风格参考**: 类似影片、视觉风格
+**Don't use when:**
 
-### 4. 时间轴可视化
-- **时间轴图**: 直观展示各镜头时长和顺序
-- **节奏曲线**: 视觉化节奏快慢变化
-- **情绪曲线**: 配合情感起伏的视觉设计
+- User has provided existing footage to edit (proceed directly to editing)
+- Simple single-shot video with no camera movement
+- Content is audio-only (podcast, music)
 
-## 使用场景
+## Core Pattern
 
-### 场景 1: 旅行视频分镜
 ```
-脚本段落: "走在京都的石板路上，时间仿佛慢了下来"
-
-生成分镜:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-镜号: 01
-时间: 0:15-0:20 (5秒)
-景别: 全景
-画面: 古老街道纵深感，两侧传统建筑
-运镜: 缓慢推进，模拟行走视角
-光线: 午后柔和侧光，树影斑驳
-参考: [京都街道参考图1] [参考图2]
-
-镜号: 02
-时间: 0:20-0:25 (5秒)
-景别: 中景
-画面: 主角背影，和服衣角飘动
-运镜: 跟随拍摄，轻微晃动增加真实感
-光线: 逆光，轮廓光
-参考: [和服背影参考图]
-
-镜号: 03
-时间: 0:25-0:30 (5秒)
-景别: 特写
-画面: 樱花飘落，落在石板路上
-运镜: 固定机位，慢动作
-光线: 侧逆光，花瓣透亮
-参考: [樱花特写参考图]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Parse → Decompose → Design → Sequence → Reference
 ```
 
-### 场景 2: 产品发布分镜
-```
-脚本段落: "产品轮廓渐显"
+1. **Parse**: Analyze script for visual content, emotion, and timing
+2. **Decompose**: Break narrative into discrete visual moments
+3. **Design**: Specify each shot's technical parameters (type, angle, movement, duration)
+4. **Sequence**: Arrange shots with appropriate transitions and rhythm
+5. **Reference**: Gather visual references for style, composition, and mood
 
-生成分镜:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-镜号: 05
-时间: 0:05-0:10 (5秒)
-景别: 特写→全景
-画面: 从黑暗中逐渐显现的产品轮廓
-运镜: 环绕产品 360 度旋转，同时拉远
-光线: 轮廓光逐渐亮起，产品发光
-特效: 粒子效果，科技感线条
-参考: [Apple 产品发布风格] [科技感参考]
+## Quick Reference
 
-镜号: 06
-时间: 0:10-0:15 (5秒)
-景别: 特写
-画面: 产品细节特写（摄像头、屏幕等）
-运镜: 快速剪辑，多角度展示
-光线: 冷色调科技光
-音效: 机械启动音效
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+| Shot Type | Use For | Typical Duration | Emotional Effect |
+|-----------|---------|------------------|------------------|
+| Extreme Wide | Establishing location | 3-5s | Scale, isolation |
+| Wide | Full subject + context | 3-5s | Grounding, setting |
+| Medium | Waist up, action/dialogue | 4-7s | Standard, balanced |
+| Close-up | Face, emotion, detail | 3-5s | Intimacy, emphasis |
+| Extreme Close-up | Specific detail, texture | 2-3s | Intensity, abstraction |
 
-### 场景 3: Mood Board 创建
-```
-项目: 夏日旅行治愈系视频
+| Camera Movement | Use For | Emotional Effect |
+|-----------------|---------|------------------|
+| Static | Stability, observation | Objective, calm |
+| Push in | Reveal, focus, intimacy | Growing importance |
+| Pull out | Context, perspective shift | Expansion, revelation |
+| Pan | Environment scan, following | Spatial awareness |
+| Tilt | Vertical reveal, emphasis | Height, dominance |
+| Track/Dolly | Movement through space | Immersion, dynamism |
+| Handheld | Realism, urgency | Documentary, tension |
 
-Mood Board:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【色彩方案】
-主色调: 暖黄、薄荷绿、天蓝
-辅助色: 白色、浅粉
-整体感觉: 清新、温暖、明亮
-参考: [色板图片1] [色板图片2]
+## Implementation
 
-【光影风格】
-黄金时刻: 日出日落柔和光线
-逆光剪影: 人物轮廓光
-斑驳光影: 树叶间隙光斑
-参考: [光影参考图1] [光影参考图2]
+### Script Parsing
 
-【构图参考】
-三分法: 地平线在下 1/3
-引导线: 道路、河流引导视线
-对称构图: 建筑倒影
-参考: [构图参考图1] [构图参考图2]
-
-【参考影片】
-- 《小森林》自然清新风格
-- 《海街日记》温暖治愈风格
-- 《你的名字》精致画面风格
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```python
+def parse_script_for_visuals(script_segment):
+    """
+    Extract visual requirements from script text.
+    """
+    visual_analysis = {
+        "time_code": "0:15-0:30",
+        "action": "walking through Kyoto streets",
+        "emotion": "peaceful, contemplative",
+        "key_elements": ["stone pavement", "traditional buildings", "cherry blossoms"],
+        "movement": "continuous forward motion",
+        "lighting": "afternoon, dappled sunlight"
+    }
+    return visual_analysis
 ```
 
-## 工作流程
+### Shot Decomposition
 
-### 步骤 1: 解析脚本
-- 理解每个段落的意图和情感
-- 确定需要的镜头数量和类型
-- 标注关键画面和转场点
+```python
+def decompose_into_shots(visual_analysis, total_duration):
+    """
+    Break narrative moment into individual shots.
+    """
+    shots = [
+        {
+            "shot_number": 1,
+            "type": "wide",
+            "duration": 5,
+            "description": "Street perspective, establishing depth",
+            "camera": "static, eye level",
+            "lighting": "natural afternoon side light"
+        },
+        {
+            "shot_number": 2,
+            "type": "medium",
+            "duration": 5,
+            "description": "Subject from behind, walking",
+            "camera": "tracking, following",
+            "lighting": "backlit silhouette"
+        },
+        {
+            "shot_number": 3,
+            "type": "close-up",
+            "duration": 5,
+            "description": "Cherry blossom petals falling",
+            "camera": "static, slow motion",
+            "lighting": "backlit, translucent petals"
+        }
+    ]
+    return shots
+```
 
-### 步骤 2: 设计镜头
-为每个镜头确定：
-- 景别（远景/全景/中景/近景/特写）
-- 角度（平视/俯视/仰视）
-- 运动（固定/推/拉/摇/移）
-- 时长（根据节奏确定）
+### Shot Specification
 
-### 步骤 3: 规划转场
-- 镜头之间的衔接方式
-- 转场的时机和节奏
-- 特殊转场效果设计
+```python
+def specify_shot(shot_concept):
+    """
+    Create complete shot specification.
+    """
+    shot_spec = {
+        "shot_id": "S01_03",
+        "time_code": "0:25-0:30",
+        "duration_seconds": 5,
+        
+        "shot_type": "close-up",
+        "shot_size": "extreme_close-up",  # wide, medium, close-up, etc.
+        
+        "camera": {
+            "angle": "eye level",  # eye level, low, high, dutch
+            "movement": "static",  # static, push, pull, pan, tilt, track
+            "speed": "normal",  # normal, slow, fast
+            "lens": "85mm"  # focal length/effect
+        },
+        
+        "composition": {
+            "rule": "rule_of_thirds",  # rule_of_thirds, center, symmetry
+            "subject_position": "center",
+            "depth": "shallow"  # deep, shallow
+        },
+        
+        "lighting": {
+            "quality": "soft",  # hard, soft
+            "direction": "backlight",  # front, side, back, top
+            "color_temp": "warm"  # warm, cool, neutral
+        },
+        
+        "content": {
+            "subject": "cherry blossom petals",
+            "action": "falling slowly",
+            "foreground": "out of focus branch",
+            "background": "blurred street scene"
+        },
+        
+        "sound": {
+            "music": "continues from previous",
+            "sfx": "soft wind, petal rustle",
+            "voice": "none"
+        },
+        
+        "notes": "Shoot at 60fps for slow motion playback",
+        "reference_images": ["ref_sakura_01.jpg"]
+    }
+    return shot_spec
+```
 
-### 步骤 4: 创建 Mood Board
-- 收集参考图片
-- 确定色彩方案
-- 整理光影参考
-- 汇总风格参考
+### Transition Planning
 
-### 步骤 5: 生成时间轴
-- 可视化时间轴图
-- 标注各镜头时长
-- 展示节奏变化
+```python
+def plan_transition(from_shot, to_shot, style="natural"):
+    """
+    Determine transition type between shots.
+    """
+    transitions = {
+        "natural": {
+            "cut": "standard, direct",
+            "fade": "time passage, mood shift",
+            "dissolve": "memory, connection",
+            "wipe": "energetic, modern"
+        },
+        "match_cut": {
+            "graphic": "shape/color continuity",
+            "movement": "action continues across cut",
+            "sound": "audio bridges visual change"
+        }
+    }
+    
+    # Choose based on content relationship and pacing needs
+    return select_transition(from_shot, to_shot, style)
+```
 
-## 输出格式
+### Mood Board Creation
 
-### 分镜表
+```python
+def create_mood_board(project_style):
+    """
+    Compile visual references for production.
+    """
+    mood_board = {
+        "project": "Summer Travel",
+        "style": "healing/natural",
+        
+        "color_palette": {
+            "primary": ["#FFD700", "#98FB98", "#87CEEB"],
+            "secondary": ["#FFFFFF", "#FFB6C1"],
+            "mood": "warm, fresh, bright"
+        },
+        
+        "lighting_references": [
+            {"type": "golden_hour", "description": "Warm, soft, directional"},
+            {"type": "backlight_silhouette", "description": "Contours, rim light"}
+        ],
+        
+        "composition_references": [
+            {"technique": "rule_of_thirds", "use": "Landscape horizons"},
+            {"technique": "leading_lines", "use": "Paths, roads, rivers"},
+            {"technique": "frame_within_frame", "use": "Doorways, arches"}
+        ],
+        
+        "film_references": [
+            {"title": "Little Forest", "elements": "Natural light, food, seasons"},
+            {"title": "Our Little Sister", "elements": "Warm family moments, tradition"}
+        ]
+    }
+    return mood_board
+```
+
+## Common Mistakes
+
+| Mistake | Problem | Solution |
+|---------|---------|----------|
+| Shot type monotony | Boring visual rhythm | Vary shot sizes; follow wide→medium→close-up pattern |
+| 180-degree rule violation | Spatial confusion, disorientation | Establish axis and maintain camera position relative to it |
+| Over-complex movement | Distracting from content | Movement serves story; static often better |
+| Jump cuts without purpose | Amateur appearance | Use cutaways or matching action to bridge time |
+| Ignoring lighting continuity | Disconnected scenes | Plan lighting scheme across sequence |
+| Shots too long | Pacing drags | Most shots 3-7 seconds; vary for rhythm |
+| Missing coverage | No options in editing | Get wide, medium, and close of key moments |
+| Unclear subject | Viewer doesn't know where to look | Use composition to direct attention |
+
+## Shot List Template
+
 ```json
 {
-  "project": "夏日旅行记",
-  "total_duration": 150,
+  "project": "Travel Video",
+  "scene": "Kyoto Streets",
+  "total_duration": 15,
   "shots": [
     {
-      "shot_number": 1,
-      "time_code": "0:00-0:05",
+      "id": "S01_01",
+      "time": "0:00-0:05",
+      "type": "wide",
       "duration": 5,
-      "scene": "开场",
-      "shot_type": "远景",
-      "camera_angle": "平视",
-      "camera_movement": "固定",
-      "description": "飞机窗外，云海之上，日出金光",
-      "lighting": "金色阳光，云海反光",
-      "sound": "轻柔钢琴渐入",
-      "notes": "使用延时摄影",
-      "reference_images": ["ref_001.jpg", "ref_002.jpg"]
+      "description": "Street establishing shot",
+      "camera": "static, eye level",
+      "notes": "Get depth, both sides of street"
     },
     {
-      "shot_number": 2,
-      "time_code": "0:05-0:10",
+      "id": "S01_02", 
+      "time": "0:05-0:10",
+      "type": "medium",
       "duration": 5,
-      "scene": "开场",
-      "shot_type": "特写",
-      "camera_angle": "平视",
-      "camera_movement": "缓慢推进",
-      "description": "主角望向窗外的侧脸，眼神期待",
-      "lighting": "侧逆光，轮廓光",
-      "sound": "钢琴继续",
-      "notes": "浅景深，背景虚化",
-      "reference_images": ["ref_003.jpg"]
+      "description": "Subject walking away",
+      "camera": "tracking, following",
+      "notes": "Maintain consistent distance"
+    },
+    {
+      "id": "S01_03",
+      "time": "0:10-0:15", 
+      "type": "close-up",
+      "duration": 5,
+      "description": "Cherry blossom petals",
+      "camera": "static, slow motion",
+      "notes": "Shoot 60fps for slow mo"
     }
   ]
 }
 ```
 
-### Mood Board
-```json
-{
-  "project": "夏日旅行记",
-  "style": "治愈系",
-  "color_palette": {
-    "primary": ["#FFD700", "#98FB98", "#87CEEB"],
-    "secondary": ["#FFFFFF", "#FFB6C1"],
-    "mood": "清新、温暖、明亮"
-  },
-  "lighting": {
-    "style": "黄金时刻",
-    "description": "日出日落柔和光线，逆光剪影",
-    "references": ["light_ref_1.jpg", "light_ref_2.jpg"]
-  },
-  "composition": {
-    "techniques": ["三分法", "引导线", "对称构图"],
-    "references": ["comp_ref_1.jpg", "comp_ref_2.jpg"]
-  },
-  "film_references": [
-    {"title": "小森林", "style": "自然清新"},
-    {"title": "海街日记", "style": "温暖治愈"},
-    {"title": "你的名字", "style": "精致画面"}
-  ],
-  "image_references": [
-    "mood_001.jpg",
-    "mood_002.jpg",
-    "mood_003.jpg"
-  ]
-}
-```
+## Red Flags - Design Issues
 
-### 时间轴可视化
-```
-时间轴 (150秒):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-0:00    0:30    1:00    1:30    2:00    2:30
-│       │       │       │       │       │
-├─开场──┤       │       │       │       │
-│ 15s   │       │       │       │       │
-│ [远景]│       │       │       │       │
-│       ├──────发展─────┤       │       │
-│       │     75s       │       │       │
-│       │ [中景][特写]  │       │       │
-│       │       │       ├─高潮──┤       │
-│       │       │       │ 30s   │       │
-│       │       │       │[全景] │       │
-│       │       │       │       ├─结尾─┤
-│       │       │       │       │ 30s  │
-│       │       │       │       │[远景]│
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-节奏曲线:
-慢 ──────────────────────────────────────── 快
-│                                          │
-开场          发展           高潮      结尾
-平静          渐进           紧张      舒缓
-```
-
-## 镜头语言指南
-
-### 景别选择
-- **远景**: 展现场景全貌，建立空间感
-- **全景**: 展现人物全身，交代动作
-- **中景**: 膝盖以上，最常用，平衡信息
-- **近景**: 胸部以上，强调表情
-- **特写**: 局部细节，强调重点
-
-### 角度选择
-- **平视**: 自然、客观、亲近
-- **俯视**: 渺小、弱势、审视
-- **仰视**: 崇高、强大、压迫
-- **倾斜**: 不稳定、紧张、动感
-
-### 运动选择
-- **固定**: 稳定、客观、观察
-- **推**: 强调、进入、关注
-- **拉**: 展开、远离、揭示
-- **摇**: 环顾、搜索、连接
-- **移**: 跟随、流动、空间感
-- **跟**: 陪伴、代入、紧张
-
-### 转场方式
-- **切**: 最常用，直接、快速
-- **淡入淡出**: 时间流逝、情绪转换
-- **叠化**: 回忆、梦境、时间重叠
-- **划像**: 活泼、现代、节奏感
-- **匹配剪辑**: 视觉连贯、创意转场
-
-## 最佳实践
-
-1. **景别变化** - 避免同景别连续使用，注意节奏变化
-2. **180度规则** - 保持轴线一致，避免跳轴
-3. **视线引导** - 利用构图引导观众视线
-4. **留白艺术** - 适当留白，给观众想象空间
-5. **参考学习** - 多看电影，学习大师的分镜设计
-
-## 常见错误
-
-- ❌ 景别单调，缺乏变化
-- ❌ 镜头过长，节奏拖沓
-- ❌ 跳轴，空间感混乱
-- ❌ 过度使用特效转场
-- ❌ 分镜与脚本脱节
-
-## 依赖
-
-- 无外部依赖
-- 基于大模型的视觉理解能力
-- 可选：图像搜索 API（获取参考图）
+- **Same shot size repeated**: More than 2 consecutive shots of same type
+- **Unclear camera direction**: Vague descriptions like "move camera around"
+- **Missing time calculations**: Shot durations don't add up to scene duration
+- **Impossible transitions**: Suggesting continuous movement across incompatible shots
+- **No lighting plan**: Assuming lighting will "work out" on set
+- **Over-reliance on effects**: Using transitions/effects to fix poor shot planning
+- **Ignoring audio**: Visual plan without sound design consideration

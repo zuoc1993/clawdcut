@@ -1,264 +1,240 @@
 ---
 name: creative-scripting
-description: 创意脚本与旁白撰写 - 故事结构、旁白文案、对话设计、时间轴规划
+description: Use when creating video narration, voiceover scripts, or dialogue that requires emotional storytelling, style-appropriate language, and precise timing alignment with visual content
 ---
 
-# Creative Scripting Skill
+# Creative Scripting
 
-## 用途
+## Overview
 
-将用户的创作意图转化为专业的视频脚本和旁白文案。
+Transforms creative intent into production-ready narration and dialogue. Focuses on matching language style to video tone, pacing content to fit time constraints, and creating authentic emotional resonance.
 
-## 能力范围
+## When to Use
 
-### 1. 故事结构设计
-- **起承转合**: 开场吸引、发展推进、高潮冲突、结尾升华
-- **三幕结构**: 第一幕（设定）、第二幕（对抗）、第三幕（解决）
-- **情感曲线**: 情绪起伏设计，引导观众情感体验
+**Use this skill when:**
 
-### 2. 旁白撰写
-- **风格匹配**: 根据视频类型选择语言风格
-  - 治愈系: 温暖、诗意、留白
-  - 热血系: 激昂、短促、有力
-  - 悬疑系: 神秘、暗示、留白
-  - 记录系: 客观、详实、叙事
-- **节奏控制**: 语速与画面节奏匹配
-- **情感表达**: 用文字传递情绪
+- Writing narration or voiceover for video content
+- Dialogue needs to match a specific emotional tone (healing, energetic, suspenseful, documentary)
+- Script duration must align with visual timing constraints
+- Audience-specific language adaptation is required
+- Emotional arc needs careful calibration (avoid over-dramatization or under-delivery)
 
-### 3. 对话设计
-- **角色塑造**: 通过对话展现人物性格
-- **自然流畅**: 避免生硬说教
-- **信息传递**: 巧妙植入关键信息
+**Don't use when:**
 
-### 4. 时间轴规划
-- **时长分配**: 各段落合理分配时间
-- **节奏控制**: 快慢结合，张弛有度
-- **转场设计**: 场景切换的时机和方式
+- Content is purely informational with no narrative component
+- User has already provided finalized script text
+- Technical specifications document (not creative writing)
 
-## 使用场景
+## Core Pattern
 
-### 场景 1: 旅行视频脚本
 ```
-用户需求: "日本旅行，想要治愈系的感觉"
-
-生成脚本:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【开场】0:00-0:15
-画面: 飞机窗外云海日出
-旁白: "有些旅程，不是为了到达，而是为了出发。"
-音乐: 轻柔钢琴渐入
-
-【发展】0:15-1:30
-画面: 京都街道、樱花、神社
-旁白: "走在京都的石板路上，
-      时间仿佛慢了下来。
-      一阵风吹过，
-      樱花如雪般飘落。"
-      
-【高潮】1:30-2:00
-画面: 富士山日出、温泉、美食
-旁白: "站在富士山脚下，
-      看着第一缕阳光照亮山顶，
-      所有的疲惫都烟消云散。"
-
-【结尾】2:00-2:30
-画面: 夕阳下的归途
-旁白: "旅行终会结束，
-      但那些美好的瞬间，
-      会永远留在心里。"
-      
-字幕: "日本，再见。下次再见。"
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Analyze → Structure → Draft → Calibrate → Finalize
 ```
 
-### 场景 2: 产品发布脚本
-```
-用户需求: "新产品发布，科技感，要燃"
+1. **Analyze**: Extract intent, target audience, emotional goals, duration constraints
+2. **Structure**: Choose narrative framework (three-act, emotional arc, problem-solution)
+3. **Draft**: Write with style-specific vocabulary, pacing, and sentence structures
+4. **Calibrate**: Adjust for timing (120-150 words/minute), emotional authenticity, audience fit
+5. **Finalize**: Polish for flow, eliminate redundancy, ensure visual-textual alignment
 
-生成脚本:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【开场】0:00-0:10
-画面: 黑屏，心跳声
-旁白: "三年。"
-画面: 快速闪过研发场景
-旁白: "一千零九十五天。"
-画面: 产品轮廓渐显
-旁白: "只为这一刻。"
+## Quick Reference
 
-【痛点】0:10-0:30
-画面: 用户使用旧产品的困扰
-旁白: "我们听到了你们的声音。"
-      "痛点，我们懂。"
-      
-【解决方案】0:30-1:00
-画面: 产品特写，功能展示
-旁白: "所以，我们带来了..."
-      [产品名]
-      "重新定义行业标准。"
+| Video Style | Language | Sentence Structure | Key Vocabulary | Pacing |
+|-------------|----------|-------------------|----------------|--------|
+| Healing (治愈系) | Warm, poetic | Short with pauses | Light, shadows, time, memory | Slow, contemplative |
+| Energetic (热血系) | Forceful, short | Parallel, repetitive | Dreams, breakthrough, change | Fast, punchy |
+| Suspenseful (悬疑系) | Mysterious, suggestive | Questions, inversions | Truth, secrets, clues | Measured, withholding |
+| Documentary (记录系) | Objective, factual | Clear statements | Time, place, events, data | Steady, informative |
 
-【高潮】1:00-1:30
-画面: 产品全景，用户惊喜表情
-旁白: "这不是升级。"
-      "这是革命。"
-      
-【结尾】1:30-1:45
-画面: 产品 logo，价格
-旁白: "今天，改变世界。"
-字幕: "现已发售"
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+## Implementation
 
-### 场景 3: 情感短片脚本
-```
-用户需求: "父亲节主题，温馨感人"
+### Intent Analysis
 
-生成脚本:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【开场】0:00-0:20
-画面: 旧照片，父亲年轻时的样子
-旁白: "小时候，
-      觉得父亲是超人，
-      什么都会，什么都不怕。"
-
-【发展】0:20-1:00
-画面: 成长片段，父亲的陪伴
-旁白: "后来慢慢长大，
-      开始觉得父亲过时了，
-      不懂我们这一代。"
-      
-【转折】1:00-1:30
-画面: 离家场景，父亲送别
-旁白: "直到那天离开家，
-      回头看了一眼，
-      才发现父亲的背，
-      已经不那么直了。"
-
-【高潮】1:30-2:00
-画面: 电话通话，父亲沉默的爱
-旁白: "他从来不善言辞，
-      但每一句'吃了吗'，
-      都是'我想你了'。"
-
-【结尾】2:00-2:30
-画面: 回家拥抱，父亲微笑
-旁白: "爸爸，
-      谢谢你做的一切。
-      父亲节快乐。"
-      
-字幕: "爱，要趁早说"
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
-## 工作流程
-
-### 步骤 1: 需求分析
-- 理解用户意图和情感诉求
-- 确定目标受众和使用场景
-- 明确视频时长和风格
-
-### 步骤 2: 结构设计
-- 选择合适的叙事结构
-- 规划段落和时长分配
-- 设计情感曲线
-
-### 步骤 3: 内容撰写
-- 撰写各段落旁白/对话
-- 标注画面描述
-- 添加音乐/音效提示
-
-### 步骤 4: 优化调整
-- 检查节奏和流畅度
-- 确保情感表达准确
-- 优化语言表达
-
-## 输出格式
-
-```json
-{
-  "title": "夏日旅行记",
-  "style": "治愈系",
-  "duration": 150,
-  "structure": {
-    "opening": {
-      "time_range": "0:00-0:15",
-      "duration": 15,
-      "visual": "飞机窗外云海日出",
-      "narration": "有些旅程，不是为了到达，而是为了出发。",
-      "music": "轻柔钢琴渐入",
-      "emotion": "期待、宁静"
-    },
-    "development": [
-      {
-        "time_range": "0:15-0:45",
-        "duration": 30,
-        "visual": "京都街道、樱花飘落",
-        "narration": "走在京都的石板路上，时间仿佛慢了下来。",
-        "emotion": "平和、美好"
-      }
-    ],
-    "climax": {
-      "time_range": "1:30-2:00",
-      "duration": 30,
-      "visual": "富士山日出",
-      "narration": "站在富士山脚下，看着第一缕阳光照亮山顶。",
-      "emotion": "震撼、感动"
-    },
-    "ending": {
-      "time_range": "2:00-2:30",
-      "duration": 30,
-      "visual": "夕阳下的归途",
-      "narration": "旅行终会结束，但那些美好的瞬间，会永远留在心里。",
-      "emotion": "温暖、留恋"
+```python
+def analyze_intent(user_request):
+    """
+    Extract all relevant parameters from user input.
+    """
+    analysis = {
+        "intent": "travel documentation",
+        "tone": "healing/peaceful",
+        "duration_seconds": 150,
+        "target_audience": "general, social media",
+        "key_themes": ["journey", "beauty", "reflection"],
+        "style_reference": "Japanese travel vlogs",
+        "constraints": {
+            "max_words": 150 * 2.2,  # ~330 words for 150s
+            "language": "chinese",
+            "avoid": ["clichés", "over-dramatization"]
+        }
     }
-  },
-  "full_script": "...",
-  "notes": "建议在高潮部分使用延时摄影增强视觉效果"
-}
+    return analysis
 ```
 
-## 风格指南
+### Structure Design
 
-### 治愈系
-- **语言**: 温柔、诗意、留白
-- **句式**: 短句为主，适当停顿
-- **词汇**: 自然、光影、时间、记忆
-- **示例**: "阳光透过树叶的缝隙，洒下一地斑驳。"
+```python
+def design_structure(analysis):
+    """
+    Map content to narrative structure with timing.
+    """
+    structure = {
+        "opening": {
+            "duration": 15,
+            "emotion": "anticipation",
+            "function": "hook the viewer",
+            "word_count": 20
+        },
+        "development": {
+            "duration": 90,
+            "emotion": "immersion",
+            "function": "deliver experience",
+            "word_count": 150
+        },
+        "climax": {
+            "duration": 30,
+            "emotion": "revelation",
+            "function": "emotional peak",
+            "word_count": 50
+        },
+        "ending": {
+            "duration": 15,
+            "emotion": "closure",
+            "function": "memorable takeaway",
+            "word_count": 25
+        }
+    }
+    return structure
+```
 
-### 热血系
-- **语言**: 激昂、短促、有力
-- **句式**: 排比、递进、反复
-- **词汇**: 梦想、突破、改变、超越
-- **示例**: "不是为了赢，只是不想输。"
+### Style-Specific Writing
 
-### 悬疑系
-- **语言**: 神秘、暗示、留白
-- **句式**: 疑问、倒装、省略
-- **词汇**: 真相、秘密、时间、线索
-- **示例**: "那天之后，一切都变了。"
+**Healing Style Example:**
 
-### 记录系
-- **语言**: 客观、详实、叙事
-- **句式**: 陈述句为主，逻辑清晰
-- **词汇**: 时间、地点、事件、数据
-- **示例**: "2024年3月15日，项目正式启动。"
+```
+Opening (15s, ~20 words):
+"Some journeys aren't about arriving. They're about beginning."
 
-## 最佳实践
+Characteristics:
+- Short sentences with natural pauses
+- Metaphorical language
+- Nature and time imagery
+- Contemplative tone
+```
 
-1. **了解受众** - 根据目标受众调整语言风格
-2. **控制字数** - 旁白字数与时长匹配（约 120-150 字/分钟）
-3. **留白艺术** - 适当留白，给观众思考空间
-4. **情感真实** - 避免过度煽情，保持真诚
-5. **画面配合** - 旁白与画面内容呼应
+**Energetic Style Example:**
 
-## 常见错误
+```
+Opening (10s, ~15 words):
+"Three years. One thousand days. This moment."
 
-- ❌ 过于冗长，信息密度低
-- ❌ 说教口吻，缺乏情感
-- ❌ 与画面脱节，各说各话
-- ❌ 专业术语过多，观众听不懂
-- ❌ 节奏单调，缺乏起伏
+Characteristics:
+- Single words as sentences
+- Numerical impact
+- Urgency and momentum
+- Direct address
+```
 
-## 依赖
+### Timing Calibration
 
-- 无外部依赖
-- 基于大模型的创意生成能力
+```python
+def calibrate_timing(script_segment, target_duration):
+    """
+    Adjust word count and pacing to fit duration.
+    """
+    words = len(script_segment.split())
+    target_words = target_duration * 2.2  # ~130 wpm for Chinese
+    
+    if words > target_words * 1.1:
+        return "condense", target_words
+    elif words < target_words * 0.9:
+        return "expand", target_words
+    else:
+        return "ok", words
+```
+
+### Emotional Authenticity Check
+
+```python
+def check_authenticity(script, target_emotion):
+    """
+    Detect over-dramatization or emotional manipulation.
+    """
+    red_flags = [
+        "excessive superlatives (most beautiful, greatest ever)",
+        "forced sentimentality",
+        "unearned emotional payoff",
+        "cliché phrases without fresh perspective"
+    ]
+    
+    # Score emotional authenticity 1-10
+    # Return recommendations for improvement
+```
+
+## Common Mistakes
+
+| Mistake | Problem | Solution |
+|---------|---------|----------|
+| Word count mismatch | Narration doesn't fit visual timing | Calculate 120-150 words/minute before drafting |
+| Style inconsistency | Mixing poetic with technical language | Commit to one style vocabulary per project |
+| Over-explaining | Telling what visuals already show | Trust visual storytelling; narration adds layers |
+| Forced emotion | Manipulative language turns off audience | Earn emotional moments through narrative buildup |
+| Ignoring audience | Wrong register for target viewers | Define audience demographics and language level |
+| Wall of text | Dense narration overwhelms | Use line breaks, pauses; 10-15 words max per line |
+| Cliché dependence | Generic, forgettable content | Replace common phrases with specific, fresh observations |
+
+## Script Structure Templates
+
+### Travel/Experience Video
+
+```
+Opening (0:00-0:15): Invitation
+- Hook: Single impactful sentence
+- Mood: Anticipatory, opening possibility
+
+Development (0:15-1:30): Immersion  
+- Sensory details: What viewer sees/feels
+- Emotional journey: Building connection
+- Rhythm: Varied pacing, highs and lows
+
+Climax (1:30-2:00): Revelation
+- Emotional peak: Moment of realization
+- Visual-text synergy: Words enhance the image
+
+Ending (2:00-2:30): Resonance
+- Memory anchor: What stays with viewer
+- Gentle closure: Open but satisfying
+```
+
+### Product Launch Video
+
+```
+Opening (0:00-0:10): Intrigue
+- Pattern interrupt: Unexpected start
+- Build: Countdown or accumulation
+
+Problem (0:10-0:30): Recognition
+- Empathy: "We hear you"
+- Stakes: Why this matters
+
+Solution (0:30-1:00): Revelation
+- Product as answer: Not features, transformation
+- Proof: Social validation or demonstration
+
+Climax (1:00-1:30): Declaration
+- Bold statement: Positioning
+- Call: Immediate action
+
+Close (1:30-1:45): Landing
+- Information: Price/availability
+- Final impact: Memorable phrase
+```
+
+## Red Flags - Quality Issues
+
+- **Cliché density**: Multiple phrases like "once in a lifetime", "journey of a lifetime", "heart and soul"
+- **Mismatched tone**: Technical jargon in emotional moment, flowery language in factual section
+- **Timing overflow**: Word count exceeds duration capacity (read faster ≠ better)
+- **Visual competition**: Describing exactly what's on screen instead of adding meaning
+- **Audience disconnect**: Using slang that misses the demographic or formal language for casual content
+- **Information dumps**: Too many facts too quickly without emotional context

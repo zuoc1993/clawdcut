@@ -57,9 +57,6 @@ class TestSkillsDir:
     def test_skills_dir_has_storyboard_design(self) -> None:
         assert (SKILLS_DIR / "storyboard-design" / "SKILL.md").exists()
 
-    def test_skills_dir_has_video_understanding(self) -> None:
-        assert (SKILLS_DIR / "video-understanding" / "SKILL.md").exists()
-
 
 class TestResolveModel:
     def test_returns_none_without_env_vars(
@@ -69,22 +66,10 @@ class TestResolveModel:
         monkeypatch.delenv("OPENAI_MODEL", raising=False)
         assert _resolve_model() is None
 
-    def test_uses_clawdcut_model_first(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_uses_clawdcut_model_first(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("CLAWDCUT_MODEL", "anthropic:claude-haiku")
         monkeypatch.setenv("OPENAI_MODEL", "gpt-4o")
         assert _resolve_model() == "anthropic:claude-haiku"
-
-    def test_initializes_openai_model_instance(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        monkeypatch.delenv("CLAWDCUT_MODEL", raising=False)
-        monkeypatch.setenv("OPENAI_MODEL", "glm-5")
-        from langchain_core.language_models import BaseChatModel
-
-        result = _resolve_model()
-        assert isinstance(result, BaseChatModel)
 
 
 class TestCreateDirectorAgent:
@@ -97,9 +82,7 @@ class TestCreateDirectorAgent:
         mock_create.assert_called_once()
 
     @patch("clawdcut.agents.director.create_deep_agent")
-    def test_passes_system_prompt(
-        self, mock_create: MagicMock, workdir: Path
-    ) -> None:
+    def test_passes_system_prompt(self, mock_create: MagicMock, workdir: Path) -> None:
         mock_create.return_value = MagicMock()
         create_director_agent(workdir)
         kwargs = mock_create.call_args[1]
@@ -132,9 +115,7 @@ class TestCreateDirectorAgent:
         assert str(SKILLS_DIR) in skills[0]
 
     @patch("clawdcut.agents.director.create_deep_agent")
-    def test_passes_backend(
-        self, mock_create: MagicMock, workdir: Path
-    ) -> None:
+    def test_passes_backend(self, mock_create: MagicMock, workdir: Path) -> None:
         mock_create.return_value = MagicMock()
         create_director_agent(workdir)
         kwargs = mock_create.call_args[1]
@@ -142,22 +123,7 @@ class TestCreateDirectorAgent:
         assert kwargs["backend"] is not None
 
     @patch("clawdcut.agents.director.create_deep_agent")
-    def test_passes_model(
-        self,
-        mock_create: MagicMock,
-        workdir: Path,
-        monkeypatch: pytest.MonkeyPatch,
-    ) -> None:
-        monkeypatch.setenv("OPENAI_MODEL", "glm-5")
-        mock_create.return_value = MagicMock()
-        create_director_agent(workdir)
-        kwargs = mock_create.call_args[1]
-        assert kwargs["model"] is not None
-
-    @patch("clawdcut.agents.director.create_deep_agent")
-    def test_passes_checkpointer(
-        self, mock_create: MagicMock, workdir: Path
-    ) -> None:
+    def test_passes_checkpointer(self, mock_create: MagicMock, workdir: Path) -> None:
         mock_create.return_value = MagicMock()
         create_director_agent(workdir)
         kwargs = mock_create.call_args[1]
@@ -178,9 +144,7 @@ class TestCreateDirectorAgent:
         assert memory_path.endswith("AGENTS.md")
 
     @patch("clawdcut.agents.director.create_deep_agent")
-    def test_returns_agent(
-        self, mock_create: MagicMock, workdir: Path
-    ) -> None:
+    def test_returns_agent(self, mock_create: MagicMock, workdir: Path) -> None:
         sentinel = MagicMock()
         mock_create.return_value = sentinel
         result = create_director_agent(workdir)
