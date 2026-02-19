@@ -43,3 +43,5 @@ htmlcov/
 .clawdcut/
 
 **/.env
+
+.DS_Store
