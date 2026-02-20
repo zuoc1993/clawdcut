@@ -9,6 +9,8 @@ from pathlib import Path
 from deepagents import SubAgent
 
 SKILLS_DIR = Path(__file__).parent.parent / "skills"
+REMOTION_BEST_PRACTICES_DIR = SKILLS_DIR / "remotion-best-practices"
+REMOTION_DEVELOPER_DIR = SKILLS_DIR / "remotion-developer"
 
 REMOTION_DEVELOPER_SYSTEM_PROMPT = """\
 <identity>
@@ -346,5 +348,8 @@ def create_remotion_developer_subagent(workdir: Path) -> SubAgent:
         ),
         "system_prompt": REMOTION_DEVELOPER_SYSTEM_PROMPT,
         "tools": [],  # Uses Bash and Read tools from deepagents
-        "skills": [str(SKILLS_DIR)],
+        "skills": [
+            str(REMOTION_BEST_PRACTICES_DIR),
+            str(REMOTION_DEVELOPER_DIR),
+        ],
     }

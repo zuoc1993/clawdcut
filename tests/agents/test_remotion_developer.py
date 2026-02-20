@@ -82,8 +82,14 @@ class TestCreateRemotionDeveloperSubagent:
         assert isinstance(tools, list)
 
     def test_has_skills(self, subagent: dict) -> None:
-        """Remotion developer should have skills configured."""
+        """Remotion developer should have remotion-specific skills only."""
         assert "skills" in subagent
         skills = subagent["skills"]
         assert isinstance(skills, list)
-        assert len(skills) > 0
+        assert len(skills) == 2
+        # Should only include remotion-related skills
+        assert any("remotion-best-practices" in s for s in skills)
+        assert any("remotion-developer" in s for s in skills)
+        # Should NOT include other skills
+        assert not any("creative-scripting" in s for s in skills)
+        assert not any("storyboard-design" in s for s in skills)
