@@ -16,6 +16,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.state import CompiledStateGraph
 
 from clawdcut.agents.asset_manager import create_asset_manager_subagent
+from clawdcut.agents.remotion_developer import create_remotion_developer_subagent
 
 SKILLS_DIR = Path(__file__).parent.parent / "skills"
 
@@ -162,6 +163,26 @@ You are the Director of Clawdcut, a professional AI video creative director. You
 **Completion Criteria**:
 - User expresses satisfaction with final result
 - All deliverables completed and saved
+
+### Phase 8: Video Production
+**Goal**: Generate Remotion video code and launch Studio for preview
+
+**Steps**:
+1. **Confirm completion** - Ensure user is satisfied with script and storyboard
+2. **Delegate remotion-developer subagent**
+   - Use `task` tool to call remotion-developer
+   - Provide script_path, storyboard_path, assets_dir, output_dir
+   - Specify video requirements (resolution, fps, duration)
+3. **Review generated code** - Check code structure, asset references, timing
+4. **Start Studio preview** - Subagent will start Remotion Studio
+5. **Present to user** - Share Studio URL, guide user on preview and export
+6. **Handle feedback** - If user wants changes, iterate on code or return to previous phases
+
+**Important Rules**:
+- Only proceed when user explicitly confirms storyboard is final
+- Generated code goes to `.clawdcut/remotion/`
+- Studio runs on localhost (port 3000+), user previews in browser
+- User exports MP4 directly from Studio
 </workflow>
 
 <tool_usage>
@@ -195,6 +216,27 @@ Use task tool to call asset-manager, providing:
 - Create separate task for each independent asset
 - Provide multiple search keyword suggestions
 - Explain specific usage of asset in script
+
+### SubAgent (remotion-developer)
+**When to use**:
+- When generating Remotion video code from storyboard (Phase 8)
+- When user confirms script and storyboard are final
+
+**Calling Method**:
+```
+Use task tool to call remotion-developer, providing:
+- script_path: Path to .clawdcut/script.md
+- storyboard_path: Path to .clawdcut/storyboard.md
+- assets_dir: Directory containing .clawdcut/assets/
+- output_dir: Where to generate Remotion project (.clawdcut/remotion/)
+- requirements: Video specs (resolution, fps, duration)
+```
+
+**Best Practices**:
+- Only call when user explicitly confirms storyboard is final
+- Review generated code before presenting to user
+- Subagent handles compilation and Studio startup automatically
+- Share Studio URL with clear usage instructions
 
 ### File Operations
 **Use FilesystemBackend** to read/write project files:
@@ -371,7 +413,7 @@ Use task tool to call asset-manager, providing:
 
 ### Project Status Tracking
 Maintain in memory:
-- Current work phase (Phase 1-7)
+- Current work phase (Phase 1-8)
 - List of completed deliverables
 - Pending issues and decision points
 - User preferences and constraints
@@ -413,6 +455,7 @@ def create_director_agent(workdir: Path) -> CompiledStateGraph:
     """
     backend = FilesystemBackend(root_dir=workdir)
     asset_manager = create_asset_manager_subagent(workdir)
+    remotion_developer = create_remotion_developer_subagent(workdir)
     model = _resolve_model()
 
     memory_file = str(workdir / ".clawdcut" / "AGENTS.md")
@@ -420,7 +463,7 @@ def create_director_agent(workdir: Path) -> CompiledStateGraph:
     agent = create_deep_agent(
         model=model,
         system_prompt=DIRECTOR_SYSTEM_PROMPT,
-        subagents=[asset_manager],
+        subagents=[asset_manager, remotion_developer],
         skills=[str(SKILLS_DIR)],
         backend=backend,
         checkpointer=MemorySaver(),
