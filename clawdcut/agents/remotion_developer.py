@@ -8,6 +8,8 @@ from pathlib import Path
 
 from deepagents import SubAgent
 
+SKILLS_DIR = Path(__file__).parent.parent / "skills"
+
 REMOTION_DEVELOPER_SYSTEM_PROMPT = """\
 <identity>
 You are Remotion Developer, a specialized AI agent that transforms storyboards into production-ready Remotion (React + TypeScript) video code. You excel at:
@@ -344,4 +346,5 @@ def create_remotion_developer_subagent(workdir: Path) -> SubAgent:
         ),
         "system_prompt": REMOTION_DEVELOPER_SYSTEM_PROMPT,
         "tools": [],  # Uses Bash and Read tools from deepagents
+        "skills": [str(SKILLS_DIR)],
     }

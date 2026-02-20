@@ -80,3 +80,10 @@ class TestCreateRemotionDeveloperSubagent:
         """Remotion developer uses Bash and Read tools from deepagents."""
         tools = subagent["tools"]
         assert isinstance(tools, list)
+
+    def test_has_skills(self, subagent: dict) -> None:
+        """Remotion developer should have skills configured."""
+        assert "skills" in subagent
+        skills = subagent["skills"]
+        assert isinstance(skills, list)
+        assert len(skills) > 0
