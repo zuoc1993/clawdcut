@@ -29,14 +29,50 @@ Transforms storyboards and scripts into production-ready Remotion (React + TypeS
 ## Core Pattern
 
 ```
-Parse → Plan → Generate → Validate → Launch
+Parse → Plan → Generate → Validate → Launch → Observe → Fix → Repeat
 ```
 
 1. **Parse**: Read script.md and storyboard.md to understand video structure
 2. **Plan**: Map shots to Remotion Sequences, design component architecture
 3. **Generate**: Create TypeScript files (types → components → Video → Root)
-4. **Validate**: Compile TypeScript, auto-fix errors (max 3 attempts)
+4. **Validate**: Compile TypeScript, auto-fix errors
 5. **Launch**: Start Remotion Studio on available port
+6. **Observe**: Verify composition loads and media plays in Studio
+7. **Fix**: Resolve runtime/startup/media errors
+8. **Repeat**: Re-run Validate + Launch + Observe until stable
+
+## Closed-Loop Execution (Mandatory)
+
+When writing Remotion code, always execute this closed loop end-to-end:
+
+1. Generate or update Remotion project code.
+2. Run `npx tsc --noEmit`.
+3. If TypeScript fails, fix errors and go back to step 2.
+4. Start Studio: `npx remotion studio --port <port> --no-open`.
+5. Verify the page actually loads and composition is playable.
+6. If startup/runtime/media playback errors appear, fix code/assets/config immediately.
+7. Re-run from step 2 until no blocking errors remain.
+8. Only then report completion.
+
+Hard requirements for this loop:
+
+- Never stop at "code generated" without startup verification.
+- Never stop at "Studio started" without checking runtime/media errors.
+- For media path issues, use `public/` + `staticFile()` conventions.
+- For single media decode failures, add `onError` fallback to keep Studio usable.
+
+## Remotion v4 Compatibility Rules (Mandatory)
+
+When generating code for Remotion v4, follow these rules strictly:
+
+1. Entry point must be `src/index.tsx` and use `registerRoot(Root)`.
+2. `remotion.config.ts` must use `Config.setEntryPoint('./src/index.tsx')`.
+3. Do not import `RemotionRoot` from `remotion` (it is not a valid export).
+4. `Sequence` uses `durationInFrames`, never `duration`.
+5. `spring()` calls must include `fps` (typically from `useVideoConfig()`).
+6. Do not use non-existent `Text` component from `remotion`; render text with `div`, `p`, `h1`, etc.
+7. Transition enum values must match declared union types. Do not invent values such as `quick` or `jump`.
+8. Every generated project must pass `npx tsc --noEmit` before launching Studio.
 
 ## Project Structure
 
@@ -272,7 +308,7 @@ export const TextOverlay: React.FC<TextOverlayProps> = ({
 import { Composition } from 'remotion';
 import { Video } from './Video';
 
-export const RemotionRoot: React.FC = () => {
+export const Root: React.FC = () => {
   return (
     <Composition
       id="MainVideo"
@@ -284,6 +320,12 @@ export const RemotionRoot: React.FC = () => {
     />
   );
 };
+
+// src/index.tsx
+import { registerRoot } from 'remotion';
+import { Root } from './Root';
+
+registerRoot(Root);
 
 // src/Video.tsx
 import { Sequence } from 'remotion';
@@ -318,7 +360,7 @@ export const Video: React.FC = () => {
             src="../assets/videos/walking_scene.mp4"
             type="video"
             durationInFrames={210}
-            cameraMovement="track"
+            cameraMovement="pan-right"
           />
         </FadeTransition>
       </Sequence>

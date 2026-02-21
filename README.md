@@ -75,6 +75,8 @@ When you run Clawdcut in a directory, it creates a `.clawdcut/` folder:
 
 - `CLAWDCUT_MODEL` - Override the default LLM model (e.g., `openai:glm-5`)
 - `OPENAI_MODEL` - Use OpenAI models (auto-prefixed with `openai:`)
+- `ANTHROPIC_MODEL` - Use Anthropic models (auto-prefixed with `anthropic:`)
+- `ANTHROPIC_BASE_URL` - Optional base URL for Anthropic-compatible third-party API
 - `PEXELS_API_KEY` - Pexels API key for stock photos/videos
 - `PIXABAY_API_KEY` - Pixabay API key for stock media
 
@@ -85,6 +87,13 @@ By default, Clawdcut uses Claude via the deepagents framework. You can configure
 ```bash
 # Use OpenAI models
 export OPENAI_MODEL="gpt-4o"
+
+# Use Anthropic models
+export ANTHROPIC_MODEL="claude-3-5-sonnet-latest"
+
+# Anthropic-compatible third-party endpoint
+export ANTHROPIC_MODEL="claude-3-5-sonnet-latest"
+export ANTHROPIC_BASE_URL="https://your-provider.example/v1"
 
 # Or explicitly set any model
 export CLAWDCUT_MODEL="openai:glm-5"

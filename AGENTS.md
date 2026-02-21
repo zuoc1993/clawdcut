@@ -125,6 +125,8 @@ uv run pytest --cov=clawdcut --cov-report=html
 |----------|---------|---------|
 | `CLAWDCUT_MODEL` | Explicit model override | `openai:glm-5` |
 | `OPENAI_MODEL` | OpenAI model selection | `gpt-4o` |
+| `ANTHROPIC_MODEL` | Anthropic model selection | `claude-3-5-sonnet-latest` |
+| `ANTHROPIC_BASE_URL` | Anthropic-compatible third-party endpoint | `https://provider.example/v1` |
 | `PEXELS_API_KEY` | Pexels API access | `your-api-key` |
 | `PIXABAY_API_KEY` | Pixabay API access | `your-api-key` |
 

@@ -64,12 +64,63 @@ class TestResolveModel:
     ) -> None:
         monkeypatch.delenv("CLAWDCUT_MODEL", raising=False)
         monkeypatch.delenv("OPENAI_MODEL", raising=False)
+        monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+        monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
         assert _resolve_model() is None
 
     def test_uses_clawdcut_model_first(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("CLAWDCUT_MODEL", "anthropic:claude-haiku")
         monkeypatch.setenv("OPENAI_MODEL", "gpt-4o")
+        monkeypatch.setenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-latest")
+        monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
         assert _resolve_model() == "anthropic:claude-haiku"
+
+    @patch("clawdcut.agents.director.init_chat_model")
+    def test_uses_openai_model_before_anthropic_model(
+        self,
+        mock_init_chat_model: MagicMock,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        sentinel_model = MagicMock()
+        mock_init_chat_model.return_value = sentinel_model
+        monkeypatch.delenv("CLAWDCUT_MODEL", raising=False)
+        monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
+        monkeypatch.setenv("OPENAI_MODEL", "gpt-4o")
+        monkeypatch.setenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-latest")
+
+        result = _resolve_model()
+
+        assert result is sentinel_model
+        mock_init_chat_model.assert_called_once_with("openai:gpt-4o")
+
+    def test_uses_anthropic_model_when_set(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.delenv("CLAWDCUT_MODEL", raising=False)
+        monkeypatch.delenv("OPENAI_MODEL", raising=False)
+        monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
+        monkeypatch.setenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-latest")
+
+        assert _resolve_model() == "anthropic:claude-3-5-sonnet-latest"
+
+    @patch("clawdcut.agents.director.init_chat_model")
+    def test_uses_anthropic_base_url_with_init_chat_model(
+        self, mock_init_chat_model: MagicMock, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        sentinel_model = MagicMock()
+        mock_init_chat_model.return_value = sentinel_model
+        monkeypatch.delenv("CLAWDCUT_MODEL", raising=False)
+        monkeypatch.delenv("OPENAI_MODEL", raising=False)
+        monkeypatch.setenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-latest")
+        monkeypatch.setenv("ANTHROPIC_BASE_URL", "https://example.com/v1")
+
+        result = _resolve_model()
+
+        assert result is sentinel_model
+        mock_init_chat_model.assert_called_once_with(
+            "anthropic:claude-3-5-sonnet-latest",
+            base_url="https://example.com/v1",
+        )
 
 
 class TestCreateDirectorAgent:

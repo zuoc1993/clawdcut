@@ -435,12 +435,20 @@ def _resolve_model() -> str | BaseChatModel | None:
     2. OPENAI_MODEL - auto-prefixed with "openai:", initialized
        via init_chat_model to use Chat Completions API
        (not the Responses API that deepagents defaults to)
-    3. None - fall back to deepagents default (Claude)
+    3. ANTHROPIC_MODEL - auto-prefixed with "anthropic:"
+       If ANTHROPIC_BASE_URL is set, initialize via init_chat_model
+       to support third-party Anthropic-compatible gateways.
+    4. None - fall back to deepagents default (Claude)
     """
     if explicit := os.environ.get("CLAWDCUT_MODEL"):
         return explicit
     if openai_model := os.environ.get("OPENAI_MODEL"):
-        return init_chat_model(f"openai:{openai_model}")
+        return init_chat_model(f"openai:{openai_model}", max_tokens=8192)
+    if anthropic_model := os.environ.get("ANTHROPIC_MODEL"):
+        model_name = f"anthropic:{anthropic_model}"
+        if anthropic_base_url := os.environ.get("ANTHROPIC_BASE_URL"):
+            return init_chat_model(model_name, base_url=anthropic_base_url, max_tokens=8192)
+        return model_name
     return None
 
 

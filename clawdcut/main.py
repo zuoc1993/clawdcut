@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from clawdcut import __version__
 from clawdcut.agents.director import create_director_agent
 
-load_dotenv()
+load_dotenv(override=True)
 
 
 _DEFAULT_MEMORY = """\
