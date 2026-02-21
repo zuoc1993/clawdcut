@@ -41,6 +41,8 @@ htmlcov/
 
 # clawdcut
 .clawdcut/
+.worktrees/
+worktrees/
 
 **/.env
 
