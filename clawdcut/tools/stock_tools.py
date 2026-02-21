@@ -14,6 +14,7 @@ PEXELS_PHOTO_URL = "https://api.pexels.com/v1/search"
 PEXELS_VIDEO_URL = "https://api.pexels.com/videos/search"
 PIXABAY_IMAGE_URL = "https://pixabay.com/api/"
 PIXABAY_VIDEO_URL = "https://pixabay.com/api/videos/"
+PIXABAY_AUDIO_URL = "https://pixabay.com/api/audio/"
 
 
 def _format_pexels_photos(data: dict[str, Any]) -> str:
@@ -108,11 +109,40 @@ def _format_pixabay_videos(data: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _format_pixabay_audio(data: dict[str, Any]) -> str:
+    """Format Pixabay audio search results into readable text."""
+    hits = data.get("hits", [])
+    if not hits:
+        return "No audio found."
+
+    total = data.get("totalHits", 0)
+    lines = [f"Found {total} audio tracks on Pixabay (showing {len(hits)}):\n"]
+
+    for i, hit in enumerate(hits, 1):
+        # Pixabay field names may vary by API version, so we check aliases.
+        preview_url = hit.get("previewURL") or hit.get("preview_url", "N/A")
+        download_url = hit.get("downloadURL") or hit.get("audio", "N/A")
+        lines.append(
+            f"{i}. [ID: {hit.get('id', '?')}] Tags: {hit.get('tags', 'N/A')}\n"
+            f"   User: {hit.get('user', 'Unknown')}\n"
+            f"   Duration: {hit.get('duration', '?')}s\n"
+            f"   Downloads: {hit.get('downloads', 0)}\n"
+            f"   Preview URL: {preview_url}\n"
+            f"   Download URL: {download_url}"
+        )
+
+    return "\n".join(lines)
+
+
 def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
     """Create stock media API tools bound to a working directory.
 
     Returns a list of tool callables:
-    [pexels_search, pexels_download, pixabay_search, pixabay_download]
+    [
+        pexels_search, pexels_download,
+        pixabay_search, pixabay_download,
+        pixabay_audio_search, pixabay_audio_download
+    ]
 
     Args:
         workdir: Working directory for resolving relative save paths.
@@ -249,4 +279,71 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
 
         return f"Downloaded to: {target}"
 
-    return [pexels_search, pexels_download, pixabay_search, pixabay_download]
+    def pixabay_audio_search(
+        query: str,
+        category: str = "music",
+        per_page: int = 10,
+    ) -> str:
+        """Search Pixabay Audio for free music or sound effects.
+
+        Args:
+            query: Search keywords (English recommended for broader results).
+            category: Audio category - "music" or "sfx".
+            per_page: Number of results to return (3-15).
+
+        Returns:
+            Formatted search results with id, tags, duration, preview URL,
+            and download URL.
+        """
+        api_key = os.environ.get("PIXABAY_API_KEY", "")
+        if not api_key:
+            return "Error: PIXABAY_API_KEY environment variable is not set."
+
+        api_category = "sound-effects" if category == "sfx" else "music"
+        params: dict[str, str | int] = {
+            "key": api_key,
+            "q": query,
+            "category": api_category,
+            "per_page": min(max(per_page, 3), 15),
+        }
+
+        try:
+            resp = httpx.get(PIXABAY_AUDIO_URL, params=params, timeout=30.0)
+            resp.raise_for_status()
+            data = resp.json()
+        except httpx.HTTPError as e:
+            return f"Error searching Pixabay Audio: {e}"
+
+        return _format_pixabay_audio(data)
+
+    def pixabay_audio_download(url: str, save_path: str) -> str:
+        """Download an audio file from Pixabay Audio to local filesystem.
+
+        Args:
+            url: Download URL from pixabay_audio_search results.
+            save_path: Relative save path
+                (e.g. .clawdcut/assets/audio/music/theme.mp3).
+
+        Returns:
+            The local file path where the file was saved.
+        """
+        target = workdir / save_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+
+        try:
+            resp = httpx.get(url, follow_redirects=True, timeout=60.0)
+            resp.raise_for_status()
+            target.write_bytes(resp.content)
+        except httpx.HTTPError as e:
+            return f"Error downloading from Pixabay Audio: {e}"
+
+        return f"Downloaded to: {target}"
+
+    return [
+        pexels_search,
+        pexels_download,
+        pixabay_search,
+        pixabay_download,
+        pixabay_audio_search,
+        pixabay_audio_download,
+    ]

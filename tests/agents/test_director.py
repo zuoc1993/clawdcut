@@ -46,6 +46,12 @@ class TestDirectorSystemPrompt:
             or "素材" in DIRECTOR_SYSTEM_PROMPT
         )
 
+    def test_prompt_mentions_audio_types(self) -> None:
+        prompt = DIRECTOR_SYSTEM_PROMPT.lower()
+        assert "audio_type" in prompt
+        assert "music" in prompt
+        assert "sfx" in prompt
+
 
 class TestSkillsDir:
     def test_skills_dir_exists(self) -> None:
@@ -91,7 +97,10 @@ class TestResolveModel:
         result = _resolve_model()
 
         assert result is sentinel_model
-        mock_init_chat_model.assert_called_once_with("openai:gpt-4o")
+        mock_init_chat_model.assert_called_once_with(
+            "openai:gpt-4o",
+            max_tokens=8192,
+        )
 
     def test_uses_anthropic_model_when_set(
         self, monkeypatch: pytest.MonkeyPatch
@@ -120,6 +129,7 @@ class TestResolveModel:
         mock_init_chat_model.assert_called_once_with(
             "anthropic:claude-3-5-sonnet-latest",
             base_url="https://example.com/v1",
+            max_tokens=8192,
         )
 
 

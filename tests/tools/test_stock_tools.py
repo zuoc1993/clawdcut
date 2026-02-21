@@ -9,6 +9,7 @@ import pytest
 from clawdcut.tools.stock_tools import (
     _format_pexels_photos,
     _format_pexels_videos,
+    _format_pixabay_audio,
     _format_pixabay_images,
     _format_pixabay_videos,
     create_stock_tools,
@@ -119,6 +120,22 @@ PIXABAY_VIDEO_RESPONSE = {
     ],
 }
 
+PIXABAY_AUDIO_RESPONSE = {
+    "total": 20,
+    "totalHits": 20,
+    "hits": [
+        {
+            "id": 33333,
+            "tags": "cinematic, ambient, background",
+            "duration": 92,
+            "downloads": 1200,
+            "user": "ComposerUser",
+            "previewURL": "https://cdn.pixabay.com/audio/preview-33333.mp3",
+            "downloadURL": "https://cdn.pixabay.com/audio/download-33333.mp3",
+        }
+    ],
+}
+
 
 # --- Fixtures ---
 
@@ -205,6 +222,19 @@ class TestFormatPixabayVideos:
     def test_empty_results(self) -> None:
         result = _format_pixabay_videos({"hits": [], "totalHits": 0})
         assert "No videos found" in result
+
+
+class TestFormatPixabayAudio:
+    def test_formats_audio_results(self) -> None:
+        result = _format_pixabay_audio(PIXABAY_AUDIO_RESPONSE)
+        assert "33333" in result
+        assert "cinematic, ambient, background" in result
+        assert "ComposerUser" in result
+        assert "92" in result
+
+    def test_empty_results(self) -> None:
+        result = _format_pixabay_audio({"hits": [], "totalHits": 0})
+        assert "No audio found" in result
 
 
 # --- Pexels Search Tests ---
@@ -407,13 +437,90 @@ class TestPixabayDownload:
         assert (workdir / ".clawdcut/assets/deep/nested/sunset.jpg").exists()
 
 
+class TestPixabayAudioSearch:
+    def test_search_audio(self, tools: dict, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("PIXABAY_API_KEY", "test-key")
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.return_value = _mock_response(PIXABAY_AUDIO_RESPONSE)
+            result = tools["pixabay_audio_search"]("cinematic")
+
+        assert "33333" in result
+        params = mock_get.call_args[1]["params"]
+        assert params["q"] == "cinematic"
+        assert params["category"] == "music"
+
+    def test_search_sfx_category(
+        self, tools: dict, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("PIXABAY_API_KEY", "test-key")
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.return_value = _mock_response(PIXABAY_AUDIO_RESPONSE)
+            tools["pixabay_audio_search"]("whoosh", category="sfx")
+
+        params = mock_get.call_args[1]["params"]
+        assert params["category"] == "sound-effects"
+
+    def test_missing_api_key(
+        self, tools: dict, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.delenv("PIXABAY_API_KEY", raising=False)
+        result = tools["pixabay_audio_search"]("cinematic")
+        assert "PIXABAY_API_KEY" in result
+
+    def test_per_page_capped(
+        self, tools: dict, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("PIXABAY_API_KEY", "test-key")
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.return_value = _mock_response(PIXABAY_AUDIO_RESPONSE)
+            tools["pixabay_audio_search"]("cinematic", per_page=100)
+
+        params = mock_get.call_args[1]["params"]
+        assert params["per_page"] <= 15
+
+    def test_http_error_returns_error_message(
+        self, tools: dict, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("PIXABAY_API_KEY", "test-key")
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.side_effect = httpx.ConnectError("Connection refused")
+            result = tools["pixabay_audio_search"]("cinematic")
+
+        assert "Error" in result
+
+
+class TestPixabayAudioDownload:
+    def test_downloads_file(self, tools: dict, workdir: Path) -> None:
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.return_value = _mock_response()
+            result = tools["pixabay_audio_download"](
+                "https://cdn.pixabay.com/audio/cinematic.mp3",
+                ".clawdcut/assets/audio/music/cinematic.mp3",
+            )
+
+        target = workdir / ".clawdcut/assets/audio/music/cinematic.mp3"
+        assert target.exists()
+        assert target.read_bytes() == b"fake-binary-content"
+        assert str(target) in result
+
+    def test_http_error_returns_error_message(self, tools: dict) -> None:
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.side_effect = httpx.ConnectError("Connection refused")
+            result = tools["pixabay_audio_download"](
+                "https://cdn.pixabay.com/audio/cinematic.mp3",
+                ".clawdcut/assets/audio/music/cinematic.mp3",
+            )
+
+        assert "Error" in result
+
+
 # --- Factory Tests ---
 
 
 class TestCreateStockTools:
-    def test_returns_four_tools(self, workdir: Path) -> None:
+    def test_returns_six_tools(self, workdir: Path) -> None:
         tools = create_stock_tools(workdir)
-        assert len(tools) == 4
+        assert len(tools) == 6
 
     def test_tool_names(self, workdir: Path) -> None:
         tools = create_stock_tools(workdir)
@@ -423,6 +530,8 @@ class TestCreateStockTools:
             "pexels_download",
             "pixabay_search",
             "pixabay_download",
+            "pixabay_audio_search",
+            "pixabay_audio_download",
         ]
 
     def test_tools_have_docstrings(self, workdir: Path) -> None:
