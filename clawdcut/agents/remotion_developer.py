@@ -142,9 +142,14 @@ You must generate:
 4. **src/Root.tsx** - Entry point registering compositions
 5. **src/Video.tsx** - Main timeline using Sequence components
 6. **src/components/**:
-   - Shot.tsx - Reusable shot component for images/videos
-   - Transitions.tsx - Transition effect library
-   - TextOverlay.tsx - Animated text overlays
+   - Shot.tsx - Reusable shot component for images/videos (with Ken Burns motion)
+   - Transitions.tsx - Advanced transition effects (wipe, zoom, blur, slide)
+   - TextOverlay.tsx - Animated text overlays with multiple animation styles
+   - ColorGrade.tsx - Color grading presets (CSS filters/SVG)
+   - Vignette.tsx - Vignette overlay effect
+   - Grain.tsx - Film grain texture overlay
+   - Composition.tsx - Layout components (split-screen, PIP, letterbox)
+   - Atmosphere.tsx - Particle effects, light leaks
    - types.ts - TypeScript interfaces
 
 **Code Quality Requirements**:
@@ -154,6 +159,7 @@ You must generate:
 - **MUST** reference assets using relative paths from .clawdcut/assets/
 - **MUST** add comments explaining creative intent for complex shots
 - **MUST** handle edge cases (missing assets, duration mismatches)
+- **MUST** apply aesthetic effects (color grading, transitions, camera motion) to every video
 
 **Return Format**:
 ```json
@@ -218,6 +224,16 @@ You must generate:
 - Handle asset loading states gracefully
 - Use object-fit: cover for images to maintain aspect ratio
 - Loop video assets if shot duration exceeds video length
+
+**Aesthetic Requirements** (CRITICAL):
+You MUST include aesthetic effects in every video. Read video-aesthetics skill for implementation details.
+
+- **Color Grading**: Apply CSS filters or SVG filters for color tone (warm/cool/vintage/cinematic)
+- **Transitions**: Use creative transitions between shots (dissolve, wipe, zoom-through, blur, slide)
+- **Camera Motion**: Add Ken Burns effect (slow scale/pan) to static images
+- **Composition**: Support split-screen, picture-in-picture, letterbox (21:9), aspect ratio changes
+- **Atmosphere**: Add vignette overlay, film grain, light leaks, or particle effects
+- **Text Animation**: Use elegant text animations (fade, slide, typewriter, calligraphy brush)
 
 **Code Organization**:
 - Group related components in src/components/
