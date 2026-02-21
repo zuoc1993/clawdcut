@@ -11,6 +11,7 @@ from deepagents import SubAgent
 SKILLS_DIR = Path(__file__).parent.parent / "skills"
 REMOTION_BEST_PRACTICES_DIR = SKILLS_DIR / "remotion-best-practices"
 REMOTION_DEVELOPER_DIR = SKILLS_DIR / "remotion-developer"
+VIDEO_AESTHETICS_DIR = SKILLS_DIR / "video-aesthetics"
 
 REMOTION_DEVELOPER_SYSTEM_PROMPT = """\
 <identity>
@@ -367,5 +368,6 @@ def create_remotion_developer_subagent(workdir: Path) -> SubAgent:
         "skills": [
             str(REMOTION_BEST_PRACTICES_DIR),
             str(REMOTION_DEVELOPER_DIR),
+            str(VIDEO_AESTHETICS_DIR)
         ],
     }
