@@ -90,6 +90,7 @@ uv run pytest --cov=clawdcut --cov-report=html
 ### APIs
 - Pexels API (requires `PEXELS_API_KEY`)
 - Pixabay API (requires `PIXABAY_API_KEY`)
+- Freesound API (requires `FREESOUND_API_KEY`)
 
 ### Development
 - `pytest` + `pytest-cov` - Testing
@@ -129,6 +130,7 @@ uv run pytest --cov=clawdcut --cov-report=html
 | `ANTHROPIC_BASE_URL` | Anthropic-compatible third-party endpoint | `https://provider.example/v1` |
 | `PEXELS_API_KEY` | Pexels API access | `your-api-key` |
 | `PIXABAY_API_KEY` | Pixabay API access | `your-api-key` |
+| `FREESOUND_API_KEY` | Freesound API access (music/sfx) | `your-api-key` |
 
 ## Notes for AI Assistants
 

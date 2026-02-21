@@ -46,7 +46,7 @@ class TestCreateAssetManagerSubagent:
     def test_has_tools(self, subagent: dict) -> None:
         assert "tools" in subagent
         tools = subagent["tools"]
-        assert len(tools) == 4
+        assert len(tools) == 6
 
     def test_tool_names(self, subagent: dict) -> None:
         tool_names = [t.__name__ for t in subagent["tools"]]
@@ -54,6 +54,8 @@ class TestCreateAssetManagerSubagent:
         assert "pexels_download" in tool_names
         assert "pixabay_search" in tool_names
         assert "pixabay_download" in tool_names
+        assert "freesound_search" in tool_names
+        assert "freesound_download" in tool_names
 
     def test_tools_bound_to_workdir(self, subagent: dict, workdir: Path) -> None:
         """Verify download tools save files relative to workdir."""

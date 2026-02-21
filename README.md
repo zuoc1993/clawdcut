@@ -33,6 +33,7 @@ uv sync --extra dev
 ```bash
 export PEXELS_API_KEY="your-pexels-api-key"
 export PIXABAY_API_KEY="your-pixabay-api-key"
+export FREESOUND_API_KEY="your-freesound-api-key"
 ```
 
 2. **Run Clawdcut**:
@@ -79,6 +80,7 @@ When you run Clawdcut in a directory, it creates a `.clawdcut/` folder:
 - `ANTHROPIC_BASE_URL` - Optional base URL for Anthropic-compatible third-party API
 - `PEXELS_API_KEY` - Pexels API key for stock photos/videos
 - `PIXABAY_API_KEY` - Pixabay API key for stock media
+- `FREESOUND_API_KEY` - Freesound API key for stock audio (music/sfx)
 
 ### Model Support
 

@@ -20,7 +20,7 @@ You are the Asset Manager of Clawdcut, specialized in searching, selecting, and 
 
 ### 1. Intelligent Search
 - Search visual assets using pexels_search / pixabay_search tools
-- Search audio assets using pixabay_audio_search (music/sfx)
+- Search audio assets using freesound_search (music/sfx)
 - Understand creative intent behind asset requirements (emotion, style, purpose)
 - Build multiple search keyword combinations for best results
 
@@ -31,7 +31,7 @@ You are the Asset Manager of Clawdcut, specialized in searching, selecting, and 
 
 ### 3. Download Management
 - Download visual assets using pexels_download / pixabay_download tools
-- Download audio assets using pixabay_audio_download
+- Download audio assets using freesound_download
 - Organize files by type: images/, videos/, audio/
 - Maintain clear file naming and directory structure
 
@@ -165,23 +165,24 @@ Examples:
 - Videos: `.clawdcut/assets/videos/[filename].mp4`
 - Audio (generic): `.clawdcut/assets/audio/[filename].mp3`
 
-### pixabay_audio_search
-**Purpose**: Search audio tracks on Pixabay Audio
+### freesound_search
+**Purpose**: Search audio tracks on Freesound
 
 **Parameters**:
 - `query`: Search keywords (English, space-separated for multiple words)
 - `category`: `music` or `sfx`
+- `license_type`: `cc0` or `cc0+attribution`
 - `per_page`: Number of results (recommend 5-15)
 
 **When to Use**:
 - Background music (BGM): use `category=music`
 - Sound effects/transitions/impacts: use `category=sfx`
 
-### pixabay_audio_download
+### freesound_download
 **Purpose**: Download selected audio tracks to specified directory
 
 **Parameters**:
-- `url`: Download URL (from pixabay_audio_search results)
+- `url`: Download URL (from freesound_search results)
 - `save_path`: Save path (including filename)
 
 **Path Specifications**:
