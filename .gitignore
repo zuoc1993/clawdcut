@@ -48,3 +48,5 @@ worktrees/
 
 .DS_Store
 **/.DS_Store
+
+test_timing.csv
