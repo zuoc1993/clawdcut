@@ -16,11 +16,18 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.state import CompiledStateGraph
 
 from clawdcut.agents.asset_manager import create_asset_manager_subagent
+from clawdcut.agents.prompt_fragments import (
+    BUILD_STYLE_BRIEF_CMD,
+    SCORE_AESTHETICS_CMD,
+    VALIDATE_STYLE_BRIEF_CMD,
+    WRITE_FILE_STRING_RULE,
+)
 from clawdcut.agents.remotion_developer import create_remotion_developer_subagent
 
 SKILLS_DIR = Path(__file__).parent.parent / "skills"
 
-DIRECTOR_SYSTEM_PROMPT = """\
+DIRECTOR_SYSTEM_PROMPT = (
+    """\
 <identity>
 You are the Director of Clawdcut, a professional AI video creative director. You work like an experienced filmmaker, deeply understanding user creative intent through dialogue and transforming abstract ideas into concrete video production plans.
 </identity>
@@ -100,9 +107,9 @@ You are the Director of Clawdcut, a professional AI video creative director. You
    - Camera/transition language
    - Composition constraints and atmosphere rules
    - MUST run script:
-     `python clawdcut/skills/video-aesthetics/scripts/build_style_brief.py --workdir .`
+     `%s`
    - MUST validate style brief:
-     `python clawdcut/skills/video-aesthetics/scripts/validate_style_brief.py --style-brief .clawdcut/style_brief.json`
+     `%s`
 6. **Proposal Presentation** - Present concept design to users and get confirmation
 
 **Decision Points**:
@@ -179,7 +186,7 @@ You are the Director of Clawdcut, a professional AI video creative director. You
    - **transition_intent** (why this transition supports narrative pacing)
 4. **Write to file**: `.clawdcut/storyboard.md`
 5. **Aesthetic Gate Check** - MUST run:
-   `python clawdcut/skills/video-aesthetics/scripts/score_aesthetics.py --project-dir . --threshold 75`
+   `%s`
    - If overall score < 75, revise storyboard and re-run scoring before confirmation.
 6. **Visual Presentation** - Show shot composition using ASCII or text descriptions
 7. **User Confirmation** - Explain creative intent for each shot
@@ -211,7 +218,7 @@ You are the Director of Clawdcut, a professional AI video creative director. You
    - Specify video requirements (resolution, fps, duration)
 3. **Review generated code** - Check code structure, asset references, timing
 4. **Preflight Aesthetic Gate** - Ensure latest score check passed (`overall >= 75`)
-   using `score_aesthetics.py`
+   using `%s`
 5. **Start Studio preview** - Subagent will start Remotion Studio
 6. **Present to user** - Share Studio URL, guide user on preview and export
 7. **Handle feedback** - If user wants changes, iterate on code or return to previous phases
@@ -293,14 +300,7 @@ Use task tool to call remotion-developer, providing:
 - All creative output must be saved in .clawdcut/ directory
 - Use descriptive filenames (English, lowercase, underscore-separated)
 - Use relative paths to reference assets in Markdown files
-- **CRITICAL for tool calls**: `write_file`'s `content` must be a plain string.
-  - Never pass a Python/JSON object directly to `content`.
-  - For JSON files, serialize first, then write the serialized text.
-  - Good pattern:
-    1. Build style brief object in reasoning
-    2. Convert to JSON text with indentation
-    3. Call `write_file(file_path='.clawdcut/style_brief.json', content='<json text>')`
-  - Bad pattern: `content={...}` (this will fail with "Input should be a valid string")
+%s
 </tool_usage>
 
 <output_formats>
@@ -478,6 +478,14 @@ Maintain in memory:
 - Review context when returning to previous topics
 </context_management>
 """
+    % (
+        BUILD_STYLE_BRIEF_CMD,
+        VALIDATE_STYLE_BRIEF_CMD,
+        SCORE_AESTHETICS_CMD,
+        SCORE_AESTHETICS_CMD,
+        WRITE_FILE_STRING_RULE,
+    )
+)
 
 
 def _resolve_model() -> BaseChatModel | None:
