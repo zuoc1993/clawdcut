@@ -486,7 +486,7 @@ def create_director_agent(workdir: Path) -> CompiledStateGraph:
     Returns:
         A compiled LangGraph agent ready for use with run_textual_app.
     """
-    backend = FilesystemBackend(root_dir=workdir)
+    backend = FilesystemBackend(root_dir=workdir, virtual_mode=True)
     asset_manager = create_asset_manager_subagent(workdir)
     remotion_developer = create_remotion_developer_subagent(workdir)
     model = _resolve_model()

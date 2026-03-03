@@ -423,7 +423,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
-    { name = "deepagents-cli", specifier = ">=0.0.21" },
+    { name = "deepagents-cli", specifier = ">=0.0.25" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
@@ -672,7 +672,7 @@ wheels = [
 
 [[package]]
 name = "deepagents"
-version = "0.4.1"
+version = "0.4.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain" },
@@ -681,14 +681,14 @@ dependencies = [
     { name = "langchain-google-genai" },
     { name = "wcmatch" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/32/71/3aa53332733cbe25e45c30ddc1a337c04b11650ba3b4fad18bddb488ae87/deepagents-0.4.1.tar.gz", hash = "sha256:054f3b3baff2405c5053a2d004e5eaaa06b1a8346018753804ec0292a627fe64", size = 78294, upload-time = "2026-02-11T15:59:38.64Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b4/30/5bba09d1c196a9e6e2e3a3406cd131bdf01e84ec67c4b6233f68a903978f/deepagents-0.4.3.tar.gz", hash = "sha256:88033c616c5ea481f2620dbb2d05533bc8fdcd48f376d713f9dba49a8157b6f8", size = 83210, upload-time = "2026-02-20T21:40:45.467Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/fa/64cbb2b3c429d8cfb2417ff7aea67f53c2b507eae135bdeabed6e755f3a0/deepagents-0.4.1-py3-none-any.whl", hash = "sha256:9973c696b452ca050fbba860f4a997d8428dc56f629c5c0f7e01e483d768a4d9", size = 88477, upload-time = "2026-02-11T15:59:37.262Z" },
+    { url = "https://files.pythonhosted.org/packages/58/f8/c076a841b68cc13d89c395cc97965b37751ed008691a304119efa0f5717e/deepagents-0.4.3-py3-none-any.whl", hash = "sha256:298d19c5c0b4c6fc6a74b68049a7bfea0ba481aece7201ab21e7172b71ee61b9", size = 94882, upload-time = "2026-02-20T21:40:44.368Z" },
 ]
 
 [[package]]
 name = "deepagents-cli"
-version = "0.0.21"
+version = "0.0.25"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiosqlite" },
@@ -713,9 +713,9 @@ dependencies = [
     { name = "textual-autocomplete" },
     { name = "tomli-w" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/de/b7/0192ac3143f9815c610a36f9d41f0c085ab8a89a5360269a0128361d1449/deepagents_cli-0.0.21.tar.gz", hash = "sha256:d002a226501677e1f23b5481bc02aace5be8755beead9642fc861e83b6f4eec8", size = 810118, upload-time = "2026-02-11T22:31:00.049Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/b5/958e2bc48dcb865a5c53f483e46af5576450d1021613c17abb5d0f02ae03/deepagents_cli-0.0.25.tar.gz", hash = "sha256:480e3396d23c2c8bf925ce1060729f76f62b5aea820dee995095017d56ce9793", size = 855496, upload-time = "2026-02-20T21:50:53.604Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/82/dc/ab3bc696ae213d92ffb81e2fd3a33cf2083d59a1da462a0859cb07fad355/deepagents_cli-0.0.21-py3-none-any.whl", hash = "sha256:442c44d97b6b8b45ed71a6a775d706d5523c1f87837f1ce1ac0640db720afc4f", size = 204733, upload-time = "2026-02-11T22:30:58.829Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/34/7da13c3baacce363c870d526b92e7b20f1d9ec75d670b679e024d150b5ad/deepagents_cli-0.0.25-py3-none-any.whl", hash = "sha256:2dafc1c051ddf5fec841fa69c4300c75b89a1d3923dad108186dcddb2f02f2f5", size = 221481, upload-time = "2026-02-20T21:50:52.39Z" },
 ]
 
 [[package]]
@@ -2456,7 +2456,7 @@ wheels = [
 
 [[package]]
 name = "textual"
-version = "7.5.0"
+version = "8.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markdown-it-py", extra = ["linkify"] },
@@ -2466,9 +2466,9 @@ dependencies = [
     { name = "rich" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9f/38/7d169a765993efde5095c70a668bf4f5831bb7ac099e932f2783e9b71abf/textual-7.5.0.tar.gz", hash = "sha256:c730cba1e3d704e8f1ca915b6a3af01451e3bca380114baacf6abf87e9dac8b6", size = 1592319, upload-time = "2026-01-30T13:46:39.881Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fb/e4/0f6b6c22a30d2dc2850b4d09c8684742cc4ab79501d4588ea05269c1de3f/textual-8.0.1.tar.gz", hash = "sha256:fe6544e57651a7c2a8249b90ec542b45fa945ce4560e69b0d563fb440e7c4db3", size = 6099133, upload-time = "2026-03-01T19:15:41.537Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/78/96ddb99933e11d91bc6e05edae23d2687e44213066bcbaca338898c73c47/textual-7.5.0-py3-none-any.whl", hash = "sha256:849dfee9d705eab3b2d07b33152b7bd74fb1f5056e002873cc448bce500c6374", size = 718164, upload-time = "2026-01-30T13:46:37.635Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/23/40e0019fa60d1e83123b72e3201879b32d68a0d6358b3588d23705107921/textual-8.0.1-py3-none-any.whl", hash = "sha256:6b7522c2bc1a3ab90f534144b7e0ca6e25d35c80942ef92ccfb42a54e945d581", size = 719152, upload-time = "2026-03-01T19:15:43.7Z" },
 ]
 
 [[package]]
