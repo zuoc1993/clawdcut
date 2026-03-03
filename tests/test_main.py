@@ -125,3 +125,38 @@ class TestMain:
             runner.invoke(main)
             result = runner.invoke(main)
             assert result.exit_code == 0
+
+    @patch("clawdcut.main.run_textual_app", new_callable=AsyncMock, return_value=0)
+    @patch("clawdcut.main.create_director_agent")
+    def test_creates_default_style_brief(
+        self,
+        mock_create_agent: MagicMock,
+        mock_run_app: AsyncMock,
+        runner: CliRunner,
+        tmp_path: Path,
+    ) -> None:
+        mock_create_agent.return_value = MagicMock()
+        with runner.isolated_filesystem(temp_dir=tmp_path) as td:
+            runner.invoke(main)
+            style_brief = Path(td) / ".clawdcut" / "style_brief.json"
+            assert style_brief.exists()
+            content = style_brief.read_text()
+            assert "style_id" in content
+            assert "cinematic_story" in content
+
+    @patch("clawdcut.main.run_textual_app", new_callable=AsyncMock, return_value=0)
+    @patch("clawdcut.main.create_director_agent")
+    def test_creates_default_aesthetic_report(
+        self,
+        mock_create_agent: MagicMock,
+        mock_run_app: AsyncMock,
+        runner: CliRunner,
+        tmp_path: Path,
+    ) -> None:
+        mock_create_agent.return_value = MagicMock()
+        with runner.isolated_filesystem(temp_dir=tmp_path) as td:
+            runner.invoke(main)
+            report_file = Path(td) / ".clawdcut" / "aesthetic_report.md"
+            assert report_file.exists()
+            content = report_file.read_text()
+            assert "Aesthetic Report" in content

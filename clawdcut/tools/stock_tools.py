@@ -8,7 +8,7 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 import httpx
 
@@ -88,6 +88,35 @@ def _safe_target_path(workdir: Path, save_path: str) -> Path:
             "Error: invalid save_path; must be under .clawdcut/assets/"
         ) from error
     return target
+
+
+def _load_style_brief(workdir: Path, style_brief_path: str) -> dict[str, Any] | None:
+    """Load style brief JSON from a project-relative path."""
+    target = (workdir / style_brief_path).resolve()
+    if not target.exists():
+        return None
+    try:
+        data = json.loads(target.read_text())
+        if isinstance(data, dict):
+            return cast(dict[str, Any], data)
+        return None
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def _compute_style_match_score(query: str, style_brief: dict[str, Any]) -> float:
+    """Compute query/style alignment score in [0, 1]."""
+    keywords = set()
+    palette = style_brief.get("palette", {})
+    for kw in palette.get("keywords", []):
+        keywords.add(str(kw).lower())
+    for kw in style_brief.get("hard_constraints", []):
+        keywords.add(str(kw).lower())
+    if not keywords:
+        return 0.0
+    lowered = query.lower()
+    hits = sum(1 for kw in keywords if kw and kw in lowered)
+    return round(min(hits / max(1, len(keywords)), 1.0), 3)
 
 
 def _format_pexels_photos(data: dict[str, Any]) -> str:
@@ -224,6 +253,7 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         query: str,
         media_type: str = "photo",
         per_page: int = 5,
+        style_brief_path: str = "",
     ) -> str:
         """Search Pexels for free stock photos or videos.
 
@@ -276,6 +306,14 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
                 len(data.get("videos", []))
                 if media_type == "video"
                 else len(data.get("photos", []))
+            ),
+            style_match_score=(
+                _compute_style_match_score(
+                    query,
+                    _load_style_brief(workdir, style_brief_path) or {},
+                )
+                if style_brief_path
+                else 0.0
             ),
         )
 
@@ -330,6 +368,7 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         query: str,
         media_type: str = "photo",
         per_page: int = 5,
+        style_brief_path: str = "",
     ) -> str:
         """Search Pixabay for free stock images or videos.
 
@@ -383,6 +422,14 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
             operation="search",
             media_type=media_type,
             raw_count=len(data.get("hits", [])),
+            style_match_score=(
+                _compute_style_match_score(
+                    query,
+                    _load_style_brief(workdir, style_brief_path) or {},
+                )
+                if style_brief_path
+                else 0.0
+            ),
         )
 
     def pixabay_download(url: str, save_path: str) -> str:
@@ -433,6 +480,7 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         category: str = "music",
         license_type: str = "cc0+attribution",
         per_page: int = 10,
+        style_brief_path: str = "",
     ) -> str:
         """Search Freesound for free music or sound effects.
 
@@ -486,6 +534,14 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
             operation="search",
             media_type=category,
             raw_count=len(data.get("results", [])),
+            style_match_score=(
+                _compute_style_match_score(
+                    query,
+                    _load_style_brief(workdir, style_brief_path) or {},
+                )
+                if style_brief_path
+                else 0.0
+            ),
         )
 
     def freesound_download(url: str, save_path: str) -> str:

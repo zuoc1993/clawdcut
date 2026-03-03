@@ -290,6 +290,32 @@ class TestPexelsSearch:
         assert payload["success"] is True
         assert mock_get.call_count == 2
 
+    def test_supports_style_brief_path(
+        self, tools: dict, monkeypatch: pytest.MonkeyPatch, workdir: Path
+    ) -> None:
+        monkeypatch.setenv("PEXELS_API_KEY", "test-key")
+        style_brief = workdir / ".clawdcut" / "style_brief.json"
+        style_brief.parent.mkdir(parents=True, exist_ok=True)
+        style_brief.write_text(
+            json.dumps(
+                {
+                    "style_id": "cinematic_story",
+                    "palette": {"keywords": ["cinematic", "warm", "film"]},
+                }
+            )
+        )
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.return_value = _mock_response(PEXELS_PHOTO_RESPONSE)
+            result = tools["pexels_search"](
+                "cinematic sunset",
+                style_brief_path=".clawdcut/style_brief.json",
+            )
+
+        payload = _parse_json_result(result)
+        assert payload["success"] is True
+        assert "style_match_score" in payload
+        assert payload["style_match_score"] > 0
+
     def test_search_videos_uses_video_endpoint(
         self, tools: dict, monkeypatch: pytest.MonkeyPatch
     ) -> None:

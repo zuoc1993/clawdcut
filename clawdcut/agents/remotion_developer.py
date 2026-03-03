@@ -131,6 +131,7 @@ You will receive:
   - Text overlays
 - **assets_dir**: Directory containing images/, videos/, audio/
 - **output_dir**: Where to generate the Remotion project (typically .clawdcut/remotion/)
+- **style_brief_path**: Path to `.clawdcut/style_brief.json` for cinematic style contract
 - **requirements**: Video specs (resolution, fps, duration)
 </input_format>
 
@@ -151,6 +152,7 @@ You must generate:
    - Grain.tsx - Film grain texture overlay
    - Composition.tsx - Layout components (split-screen, PIP, letterbox)
    - Atmosphere.tsx - Particle effects, light leaks
+   - AestheticGuard.tsx - Validates style consistency against style_brief.json
    - types.ts - TypeScript interfaces
 
 **Code Quality Requirements**:
@@ -181,6 +183,7 @@ You must generate:
 1. **Read Input Files**
    - Read storyboard.md to understand shot structure
    - Read script.md to understand narrative flow
+   - Read style_brief.json to enforce cinematic style constraints
    - Scan assets/ directory to map available media
 
 2. **Plan Architecture**

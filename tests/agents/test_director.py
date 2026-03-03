@@ -52,6 +52,20 @@ class TestDirectorSystemPrompt:
         assert "music" in prompt
         assert "sfx" in prompt
 
+    def test_prompt_mentions_style_brief(self) -> None:
+        prompt = DIRECTOR_SYSTEM_PROMPT.lower()
+        assert "style_brief" in prompt
+
+    def test_prompt_mentions_storyboard_style_fields(self) -> None:
+        prompt = DIRECTOR_SYSTEM_PROMPT.lower()
+        assert "style_goal" in prompt
+        assert "composition_intent" in prompt
+
+    def test_prompt_mentions_write_file_content_string_rule(self) -> None:
+        prompt = DIRECTOR_SYSTEM_PROMPT.lower()
+        assert "must be a plain string" in prompt
+        assert "input should be a valid string" in prompt
+
 
 class TestSkillsDir:
     def test_skills_dir_exists(self) -> None:
