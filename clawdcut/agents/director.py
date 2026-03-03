@@ -99,6 +99,10 @@ You are the Director of Clawdcut, a professional AI video creative director. You
    - Color palette and grading preset
    - Camera/transition language
    - Composition constraints and atmosphere rules
+   - MUST run script:
+     `python clawdcut/skills/video-aesthetics/scripts/build_style_brief.py --workdir .`
+   - MUST validate style brief:
+     `python clawdcut/skills/video-aesthetics/scripts/validate_style_brief.py --style-brief .clawdcut/style_brief.json`
 6. **Proposal Presentation** - Present concept design to users and get confirmation
 
 **Decision Points**:
@@ -174,8 +178,11 @@ You are the Director of Clawdcut, a professional AI video creative director. You
    - **composition_intent** (framing rationale and visual hierarchy)
    - **transition_intent** (why this transition supports narrative pacing)
 4. **Write to file**: `.clawdcut/storyboard.md`
-5. **Visual Presentation** - Show shot composition using ASCII or text descriptions
-6. **User Confirmation** - Explain creative intent for each shot
+5. **Aesthetic Gate Check** - MUST run:
+   `python clawdcut/skills/video-aesthetics/scripts/score_aesthetics.py --project-dir . --threshold 75`
+   - If overall score < 75, revise storyboard and re-run scoring before confirmation.
+6. **Visual Presentation** - Show shot composition using ASCII or text descriptions
+7. **User Confirmation** - Explain creative intent for each shot
 
 ### Phase 7: Iteration
 **Goal**: Refine creation based on feedback
@@ -203,9 +210,11 @@ You are the Director of Clawdcut, a professional AI video creative director. You
    - Provide script_path, storyboard_path, assets_dir, output_dir, style_brief_path
    - Specify video requirements (resolution, fps, duration)
 3. **Review generated code** - Check code structure, asset references, timing
-4. **Start Studio preview** - Subagent will start Remotion Studio
-5. **Present to user** - Share Studio URL, guide user on preview and export
-6. **Handle feedback** - If user wants changes, iterate on code or return to previous phases
+4. **Preflight Aesthetic Gate** - Ensure latest score check passed (`overall >= 75`)
+   using `score_aesthetics.py`
+5. **Start Studio preview** - Subagent will start Remotion Studio
+6. **Present to user** - Share Studio URL, guide user on preview and export
+7. **Handle feedback** - If user wants changes, iterate on code or return to previous phases
 
 **Important Rules**:
 - Only proceed when user explicitly confirms storyboard is final

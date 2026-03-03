@@ -84,6 +84,11 @@ class TestCreateRemotionDeveloperSubagent:
         prompt = subagent["system_prompt"].lower()
         assert "aestheticguard" in prompt or "aesthetic guard" in prompt
 
+    def test_system_prompt_mentions_aesthetic_scripts(self, subagent: dict) -> None:
+        prompt = subagent["system_prompt"].lower()
+        assert "validate_style_brief.py" in prompt
+        assert "score_aesthetics.py" in prompt
+
     def test_tools_is_list(self, subagent: dict) -> None:
         """Remotion developer uses Bash and Read tools from deepagents."""
         tools = subagent["tools"]

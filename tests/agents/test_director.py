@@ -66,6 +66,16 @@ class TestDirectorSystemPrompt:
         assert "must be a plain string" in prompt
         assert "input should be a valid string" in prompt
 
+    def test_prompt_mentions_style_brief_script(self) -> None:
+        prompt = DIRECTOR_SYSTEM_PROMPT.lower()
+        assert "build_style_brief.py" in prompt
+        assert "validate_style_brief.py" in prompt
+
+    def test_prompt_mentions_aesthetic_scoring_gate(self) -> None:
+        prompt = DIRECTOR_SYSTEM_PROMPT.lower()
+        assert "score_aesthetics.py" in prompt
+        assert "overall < 75" in prompt or "overall score < 75" in prompt
+
 
 class TestSkillsDir:
     def test_skills_dir_exists(self) -> None:
@@ -168,6 +178,13 @@ class TestResolveModel:
 
 
 class TestCreateDirectorAgent:
+    @pytest.fixture(autouse=True)
+    def _clear_model_env(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("CLAWDCUT_MODEL", raising=False)
+        monkeypatch.delenv("OPENAI_MODEL", raising=False)
+        monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+        monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
+
     @patch("clawdcut.agents.director.create_deep_agent")
     def test_calls_create_deep_agent(
         self, mock_create: MagicMock, workdir: Path

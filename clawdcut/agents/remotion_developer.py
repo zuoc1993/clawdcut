@@ -184,6 +184,11 @@ You must generate:
    - Read storyboard.md to understand shot structure
    - Read script.md to understand narrative flow
    - Read style_brief.json to enforce cinematic style constraints
+   - MUST run validation:
+     `python clawdcut/skills/video-aesthetics/scripts/validate_style_brief.py --style-brief .clawdcut/style_brief.json`
+   - MUST run pre-generation scoring gate:
+     `python clawdcut/skills/video-aesthetics/scripts/score_aesthetics.py --project-dir . --threshold 75`
+     If overall score < 75, revise aesthetic decisions before code generation.
    - Scan assets/ directory to map available media
 
 2. **Plan Architecture**
