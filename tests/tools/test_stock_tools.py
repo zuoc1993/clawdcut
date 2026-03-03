@@ -1,5 +1,6 @@
 """Tests for stock tools."""
 
+import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -166,6 +167,11 @@ def _mock_response(
     return mock
 
 
+def _parse_json_result(result: str) -> dict:
+    """Parse structured tool output."""
+    return json.loads(result)
+
+
 # --- Format Function Tests ---
 
 
@@ -255,6 +261,35 @@ class TestPexelsSearch:
         assert "v1/search" in call_url
         assert mock_get.call_args[1]["headers"]["Authorization"] == "test-key"
 
+    def test_returns_structured_result(
+        self, tools: dict, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("PEXELS_API_KEY", "test-key")
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.return_value = _mock_response(PEXELS_PHOTO_RESPONSE)
+            result = tools["pexels_search"]("sunset")
+
+        payload = _parse_json_result(result)
+        assert payload["success"] is True
+        assert payload["provider"] == "pexels"
+        assert payload["operation"] == "search"
+        assert "summary" in payload
+
+    def test_retries_transient_errors(
+        self, tools: dict, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("PEXELS_API_KEY", "test-key")
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.side_effect = [
+                httpx.ConnectError("Connection refused"),
+                _mock_response(PEXELS_PHOTO_RESPONSE),
+            ]
+            result = tools["pexels_search"]("sunset")
+
+        payload = _parse_json_result(result)
+        assert payload["success"] is True
+        assert mock_get.call_count == 2
+
     def test_search_videos_uses_video_endpoint(
         self, tools: dict, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -318,6 +353,21 @@ class TestPexelsDownload:
         assert target.exists()
         assert target.read_bytes() == b"fake-binary-content"
         assert str(target) in result
+
+    def test_rejects_path_outside_assets(
+        self,
+        tools: dict,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        monkeypatch.setenv("PEXELS_API_KEY", "test-key")
+        result = tools["pexels_download"](
+            "https://example.com/photo.jpg",
+            "../escape.jpg",
+        )
+
+        payload = _parse_json_result(result)
+        assert payload["success"] is False
+        assert "invalid save_path" in payload["error"]
 
     def test_creates_parent_directories(
         self,
@@ -437,6 +487,15 @@ class TestPixabayDownload:
 
         assert (workdir / ".clawdcut/assets/deep/nested/sunset.jpg").exists()
 
+    def test_rejects_absolute_path(self, tools: dict) -> None:
+        result = tools["pixabay_download"](
+            "https://cdn.pixabay.com/photo/sunset.jpg",
+            "/tmp/not-allowed.jpg",
+        )
+        payload = _parse_json_result(result)
+        assert payload["success"] is False
+        assert "invalid save_path" in payload["error"]
+
 
 class TestFreesoundSearch:
     def test_search_audio(self, tools: dict, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -526,6 +585,20 @@ class TestFreesoundDownload:
             )
 
         assert "Error" in result
+
+    def test_returns_structured_success(self, tools: dict) -> None:
+        with patch("clawdcut.tools.stock_tools.httpx.get") as mock_get:
+            mock_get.return_value = _mock_response()
+            result = tools["freesound_download"](
+                "https://cdn.freesound.org/previews/33333-hq.mp3",
+                ".clawdcut/assets/audio/music/cinematic.mp3",
+            )
+
+        payload = _parse_json_result(result)
+        assert payload["success"] is True
+        assert payload["provider"] == "freesound"
+        assert payload["operation"] == "download"
+        assert "path" in payload
 
 
 # --- Factory Tests ---

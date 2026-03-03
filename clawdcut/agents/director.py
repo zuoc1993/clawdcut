@@ -451,21 +451,20 @@ Maintain in memory:
 """
 
 
-def _resolve_model() -> str | BaseChatModel | None:
+def _resolve_model() -> BaseChatModel | None:
     """Resolve the LLM model from environment variables.
 
     Priority:
     1. CLAWDCUT_MODEL - explicit override (e.g. "openai:glm-5")
-    2. OPENAI_MODEL - auto-prefixed with "openai:", initialized
-       via init_chat_model to use Chat Completions API
-       (not the Responses API that deepagents defaults to)
+    2. OPENAI_MODEL - auto-prefixed with "openai:"
     3. ANTHROPIC_MODEL - auto-prefixed with "anthropic:"
-       If ANTHROPIC_BASE_URL is set, initialize via init_chat_model
-       to support third-party Anthropic-compatible gateways.
+       Supports ANTHROPIC_BASE_URL for Anthropic-compatible gateways.
     4. None - fall back to deepagents default (Claude)
+
+    Returns a concrete chat model instance for all configured model paths.
     """
     if explicit := os.environ.get("CLAWDCUT_MODEL"):
-        return explicit
+        return init_chat_model(explicit, max_tokens=8192)
     if openai_model := os.environ.get("OPENAI_MODEL"):
         return init_chat_model(f"openai:{openai_model}", max_tokens=8192)
     if anthropic_model := os.environ.get("ANTHROPIC_MODEL"):
@@ -474,7 +473,7 @@ def _resolve_model() -> str | BaseChatModel | None:
             return init_chat_model(
                 model_name, base_url=anthropic_base_url, max_tokens=8192
             )
-        return model_name
+        return init_chat_model(model_name, max_tokens=8192)
     return None
 
 

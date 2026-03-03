@@ -4,7 +4,9 @@ Supports Pexels and Pixabay for searching and downloading
 free stock photos, videos, and other media.
 """
 
+import json
 import os
+import time
 from pathlib import Path
 from typing import Any, Callable
 
@@ -15,6 +17,77 @@ PEXELS_VIDEO_URL = "https://api.pexels.com/videos/search"
 PIXABAY_IMAGE_URL = "https://pixabay.com/api/"
 PIXABAY_VIDEO_URL = "https://pixabay.com/api/videos/"
 FREESOUND_SEARCH_URL = "https://freesound.org/apiv2/search/text/"
+MAX_RETRIES = 3
+RETRY_BACKOFF_SECONDS = 0.2
+
+
+def _json_success(summary: str, **extra: Any) -> str:
+    """Build a structured success payload."""
+    return json.dumps(
+        {
+            "success": True,
+            "summary": summary,
+            **extra,
+        },
+        ensure_ascii=False,
+    )
+
+
+def _json_error(error: str, **extra: Any) -> str:
+    """Build a structured error payload."""
+    return json.dumps(
+        {
+            "success": False,
+            "error": error,
+            **extra,
+        },
+        ensure_ascii=False,
+    )
+
+
+def _is_retryable_http_error(error: httpx.HTTPError) -> bool:
+    """Return whether the HTTP error should be retried."""
+    if isinstance(error, httpx.HTTPStatusError):
+        code = error.response.status_code
+        return code >= 500 or code == 429
+    return isinstance(error, httpx.RequestError)
+
+
+def _request_with_retry(
+    request_fn: Callable[..., httpx.Response],
+    url: str,
+    **kwargs: Any,
+) -> httpx.Response:
+    """Issue an HTTP request with bounded retries for transient failures."""
+    last_error: httpx.HTTPError | None = None
+
+    for attempt in range(MAX_RETRIES):
+        try:
+            response = request_fn(url, **kwargs)
+            response.raise_for_status()
+            return response
+        except httpx.HTTPError as error:
+            last_error = error
+            if not _is_retryable_http_error(error) or attempt == MAX_RETRIES - 1:
+                raise
+            time.sleep(RETRY_BACKOFF_SECONDS * (2**attempt))
+
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError("Unexpected retry loop exit without response.")
+
+
+def _safe_target_path(workdir: Path, save_path: str) -> Path:
+    """Resolve and validate save path under .clawdcut/assets/ only."""
+    assets_root = (workdir / ".clawdcut" / "assets").resolve()
+    target = (workdir / save_path).resolve()
+    try:
+        target.relative_to(assets_root)
+    except ValueError as error:
+        raise ValueError(
+            "Error: invalid save_path; must be under .clawdcut/assets/"
+        ) from error
+    return target
 
 
 def _format_pexels_photos(data: dict[str, Any]) -> str:
@@ -165,7 +238,11 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         """
         api_key = os.environ.get("PEXELS_API_KEY", "")
         if not api_key:
-            return "Error: PEXELS_API_KEY environment variable is not set."
+            return _json_error(
+                "Error: PEXELS_API_KEY environment variable is not set.",
+                provider="pexels",
+                operation="search",
+            )
 
         headers = {"Authorization": api_key}
         url = PEXELS_VIDEO_URL if media_type == "video" else PEXELS_PHOTO_URL
@@ -175,15 +252,32 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         }
 
         try:
-            resp = httpx.get(url, headers=headers, params=params, timeout=30.0)
-            resp.raise_for_status()
-            data = resp.json()
+            data = _request_with_retry(
+                httpx.get, url, headers=headers, params=params, timeout=30.0
+            ).json()
         except httpx.HTTPError as e:
-            return f"Error searching Pexels: {e}"
+            return _json_error(
+                f"Error searching Pexels: {e}",
+                provider="pexels",
+                operation="search",
+            )
 
-        if media_type == "video":
-            return _format_pexels_videos(data)
-        return _format_pexels_photos(data)
+        summary = (
+            _format_pexels_videos(data)
+            if media_type == "video"
+            else _format_pexels_photos(data)
+        )
+        return _json_success(
+            summary,
+            provider="pexels",
+            operation="search",
+            media_type=media_type,
+            raw_count=(
+                len(data.get("videos", []))
+                if media_type == "video"
+                else len(data.get("photos", []))
+            ),
+        )
 
     def pexels_download(url: str, save_path: str) -> str:
         """Download a media file from Pexels to the local filesystem.
@@ -196,22 +290,41 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         Returns:
             The local file path where the file was saved.
         """
-        target = workdir / save_path
+        try:
+            target = _safe_target_path(workdir, save_path)
+        except ValueError as error:
+            return _json_error(
+                str(error),
+                provider="pexels",
+                operation="download",
+            )
         target.parent.mkdir(parents=True, exist_ok=True)
 
         api_key = os.environ.get("PEXELS_API_KEY", "")
         headers = {"Authorization": api_key} if api_key else {}
 
         try:
-            resp = httpx.get(
-                url, headers=headers, follow_redirects=True, timeout=60.0
+            resp = _request_with_retry(
+                httpx.get,
+                url,
+                headers=headers,
+                follow_redirects=True,
+                timeout=60.0,
             )
-            resp.raise_for_status()
             target.write_bytes(resp.content)
         except httpx.HTTPError as e:
-            return f"Error downloading from Pexels: {e}"
+            return _json_error(
+                f"Error downloading from Pexels: {e}",
+                provider="pexels",
+                operation="download",
+            )
 
-        return f"Downloaded to: {target}"
+        return _json_success(
+            f"Downloaded to: {target}",
+            provider="pexels",
+            operation="download",
+            path=str(target),
+        )
 
     def pixabay_search(
         query: str,
@@ -232,7 +345,11 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         """
         api_key = os.environ.get("PIXABAY_API_KEY", "")
         if not api_key:
-            return "Error: PIXABAY_API_KEY environment variable is not set."
+            return _json_error(
+                "Error: PIXABAY_API_KEY environment variable is not set.",
+                provider="pixabay",
+                operation="search",
+            )
 
         is_video = media_type == "video"
         url = PIXABAY_VIDEO_URL if is_video else PIXABAY_IMAGE_URL
@@ -245,15 +362,28 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
             params["image_type"] = media_type
 
         try:
-            resp = httpx.get(url, params=params, timeout=30.0)
-            resp.raise_for_status()
-            data = resp.json()
+            data = _request_with_retry(
+                httpx.get, url, params=params, timeout=30.0
+            ).json()
         except httpx.HTTPError as e:
-            return f"Error searching Pixabay: {e}"
+            return _json_error(
+                f"Error searching Pixabay: {e}",
+                provider="pixabay",
+                operation="search",
+            )
 
-        if is_video:
-            return _format_pixabay_videos(data)
-        return _format_pixabay_images(data)
+        summary = (
+            _format_pixabay_videos(data)
+            if is_video
+            else _format_pixabay_images(data)
+        )
+        return _json_success(
+            summary,
+            provider="pixabay",
+            operation="search",
+            media_type=media_type,
+            raw_count=len(data.get("hits", [])),
+        )
 
     def pixabay_download(url: str, save_path: str) -> str:
         """Download a media file from Pixabay to the local filesystem.
@@ -266,17 +396,37 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         Returns:
             The local file path where the file was saved.
         """
-        target = workdir / save_path
+        try:
+            target = _safe_target_path(workdir, save_path)
+        except ValueError as error:
+            return _json_error(
+                str(error),
+                provider="pixabay",
+                operation="download",
+            )
         target.parent.mkdir(parents=True, exist_ok=True)
 
         try:
-            resp = httpx.get(url, follow_redirects=True, timeout=60.0)
-            resp.raise_for_status()
+            resp = _request_with_retry(
+                httpx.get,
+                url,
+                follow_redirects=True,
+                timeout=60.0,
+            )
             target.write_bytes(resp.content)
         except httpx.HTTPError as e:
-            return f"Error downloading from Pixabay: {e}"
+            return _json_error(
+                f"Error downloading from Pixabay: {e}",
+                provider="pixabay",
+                operation="download",
+            )
 
-        return f"Downloaded to: {target}"
+        return _json_success(
+            f"Downloaded to: {target}",
+            provider="pixabay",
+            operation="download",
+            path=str(target),
+        )
 
     def freesound_search(
         query: str,
@@ -298,7 +448,11 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         """
         api_key = os.environ.get("FREESOUND_API_KEY", "")
         if not api_key:
-            return "Error: FREESOUND_API_KEY environment variable is not set."
+            return _json_error(
+                "Error: FREESOUND_API_KEY environment variable is not set.",
+                provider="freesound",
+                operation="search",
+            )
 
         category_filter = "tag:sfx" if category == "sfx" else "tag:music"
         if license_type == "cc0":
@@ -316,13 +470,23 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         }
 
         try:
-            resp = httpx.get(FREESOUND_SEARCH_URL, params=params, timeout=30.0)
-            resp.raise_for_status()
-            data = resp.json()
+            data = _request_with_retry(
+                httpx.get, FREESOUND_SEARCH_URL, params=params, timeout=30.0
+            ).json()
         except httpx.HTTPError as e:
-            return f"Error searching Freesound: {e}"
+            return _json_error(
+                f"Error searching Freesound: {e}",
+                provider="freesound",
+                operation="search",
+            )
 
-        return _format_freesound_audio(data)
+        return _json_success(
+            _format_freesound_audio(data),
+            provider="freesound",
+            operation="search",
+            media_type=category,
+            raw_count=len(data.get("results", [])),
+        )
 
     def freesound_download(url: str, save_path: str) -> str:
         """Download an audio file from Freesound to local filesystem.
@@ -335,17 +499,37 @@ def create_stock_tools(workdir: Path) -> list[Callable[..., str]]:
         Returns:
             The local file path where the file was saved.
         """
-        target = workdir / save_path
+        try:
+            target = _safe_target_path(workdir, save_path)
+        except ValueError as error:
+            return _json_error(
+                str(error),
+                provider="freesound",
+                operation="download",
+            )
         target.parent.mkdir(parents=True, exist_ok=True)
 
         try:
-            resp = httpx.get(url, follow_redirects=True, timeout=60.0)
-            resp.raise_for_status()
+            resp = _request_with_retry(
+                httpx.get,
+                url,
+                follow_redirects=True,
+                timeout=60.0,
+            )
             target.write_bytes(resp.content)
         except httpx.HTTPError as e:
-            return f"Error downloading from Freesound: {e}"
+            return _json_error(
+                f"Error downloading from Freesound: {e}",
+                provider="freesound",
+                operation="download",
+            )
 
-        return f"Downloaded to: {target}"
+        return _json_success(
+            f"Downloaded to: {target}",
+            provider="freesound",
+            operation="download",
+            path=str(target),
+        )
 
     return [
         pexels_search,

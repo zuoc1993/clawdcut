@@ -86,10 +86,11 @@ class TestCreateRemotionDeveloperSubagent:
         assert "skills" in subagent
         skills = subagent["skills"]
         assert isinstance(skills, list)
-        assert len(skills) == 2
+        assert len(skills) == 3
         # Should only include remotion-related skills
         assert any("remotion-best-practices" in s for s in skills)
         assert any("remotion-developer" in s for s in skills)
+        assert any("video-aesthetics" in s for s in skills)
         # Should NOT include other skills
         assert not any("creative-scripting" in s for s in skills)
         assert not any("storyboard-design" in s for s in skills)
